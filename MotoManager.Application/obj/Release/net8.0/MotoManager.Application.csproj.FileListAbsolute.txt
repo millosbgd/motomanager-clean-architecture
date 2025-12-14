@@ -13,3 +13,4 @@ C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-archite
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Application\obj\Release\net8.0\refint\MotoManager.Application.dll
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Application\obj\Release\net8.0\MotoManager.Application.pdb
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Application\obj\Release\net8.0\ref\MotoManager.Application.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Application\obj\Release\net8.0\MotoManager.Application.sourcelink.json

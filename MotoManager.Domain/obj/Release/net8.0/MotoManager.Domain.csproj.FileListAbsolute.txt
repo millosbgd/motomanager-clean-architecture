@@ -9,3 +9,4 @@ C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-archite
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Domain\obj\Release\net8.0\refint\MotoManager.Domain.dll
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Domain\obj\Release\net8.0\MotoManager.Domain.pdb
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Domain\obj\Release\net8.0\ref\MotoManager.Domain.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Domain\obj\Release\net8.0\MotoManager.Domain.sourcelink.json

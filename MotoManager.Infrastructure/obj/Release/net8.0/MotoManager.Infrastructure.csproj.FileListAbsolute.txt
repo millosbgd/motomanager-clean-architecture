@@ -17,3 +17,4 @@ C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-archite
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Infrastructure\obj\Release\net8.0\MotoManager.Infrastructure.pdb
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Infrastructure\obj\Release\net8.0\MotoManager.Infrastructure.genruntimeconfig.cache
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Infrastructure\obj\Release\net8.0\ref\MotoManager.Infrastructure.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Infrastructure\obj\Release\net8.0\MotoManager.Infrastructure.sourcelink.json
