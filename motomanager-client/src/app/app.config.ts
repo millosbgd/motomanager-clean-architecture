@@ -22,7 +22,8 @@ export const appConfig: ApplicationConfig = {
       },
       httpInterceptor: {
         allowedList: [
-          'http://localhost:10582/api/*'
+          'http://localhost:10582/api/*',
+          'https://motomanager.azurewebsites.net/api/*'
         ]
       }
     })
