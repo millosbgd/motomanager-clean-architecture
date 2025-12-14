@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\MilosNovakovic\\YandexDisk\\Posao\\Cycle\\Private\\motomanager-clean-architecture\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BE94CA05-2591-4A88-B9D4-8FED1800F9C0}|MotoManager.Api\\MotoManager.Api.csproj|c:\\users\\milosnovakovic\\yandexdisk\\posao\\cycle\\private\\motomanager-clean-architecture\\motomanager.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BE94CA05-2591-4A88-B9D4-8FED1800F9C0}|MotoManager.Api\\MotoManager.Api.csproj|solutionrelative:motomanager.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\MilosNovakovic\\YandexDisk\\Posao\\Cycle\\Private\\motomanager-clean-architecture\\MotoManager.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "MotoManager.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\MilosNovakovic\\YandexDisk\\Posao\\Cycle\\Private\\motomanager-clean-architecture\\MotoManager.Api\\appsettings.json",
+              "RelativeToolTip": "MotoManager.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAB3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-02T09:53:37.994Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

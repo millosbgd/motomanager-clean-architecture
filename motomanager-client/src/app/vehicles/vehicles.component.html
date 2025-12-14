@@ -1,0 +1,109 @@
+<div class="container">
+  <header>
+    <h1>Vozila</h1>
+    <div class="list-header">
+      <button 
+        class="btn btn-primary" 
+        (click)="showAddVehicleForm()" 
+        [disabled]="loading">
+        + Dodaj novo vozilo
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="loading">Učitavanje...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <section class="vehicle-list">
+    <table *ngIf="vehicles.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Model</th>
+          <th>Tablica</th>
+          <th>Klijent</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles">
+          <td>{{ vehicle.id }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td>{{ vehicle.plate }}</td>
+          <td>{{ vehicle.clientNaziv }}</td>
+          <td class="actions">
+            <button class="btn btn-edit" (click)="editVehicle(vehicle)">Izmeni</button>
+            <button class="btn btn-delete" (click)="deleteVehicle(vehicle.id)">Obriši</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="vehicles.length === 0 && !loading" class="no-data">Nema vozila u bazi.</p>
+  </section>
+
+  <!-- Modal za dodavanje vozila -->
+  <div *ngIf="showAddForm" class="modal-overlay" (click)="cancelAdd()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Dodaj novo vozilo</h2>
+        <button class="close-btn" (click)="cancelAdd()">&times;</button>
+      </div>
+      <form (ngSubmit)="addVehicle()">
+        <div class="form-group">
+          <label for="model">Model:</label>
+          <input type="text" id="model" name="model" [(ngModel)]="newVehicle.model" required />
+        </div>
+        <div class="form-group">
+          <label for="plate">Tablica:</label>
+          <input type="text" id="plate" name="plate" [(ngModel)]="newVehicle.plate" required />
+        </div>
+        <div class="form-group">
+          <label for="client">Klijent:</label>
+          <select id="client" name="clientId" [(ngModel)]="newVehicle.clientId" required>
+            <option value="0">Izaberite klijenta</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.naziv }}
+            </option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Dodaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelAdd()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal za ažuriranje vozila -->
+  <div *ngIf="editingVehicle" class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Izmeni vozilo</h2>
+        <button class="close-btn" (click)="cancelEdit()">&times;</button>
+      </div>
+      <form (ngSubmit)="updateVehicle()">
+        <div class="form-group">
+          <label for="edit-model">Model:</label>
+          <input type="text" id="edit-model" name="model" [(ngModel)]="editingVehicle.model" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-plate">Tablica:</label>
+          <input type="text" id="edit-plate" name="plate" [(ngModel)]="editingVehicle.plate" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-client">Klijent:</label>
+          <select id="edit-client" name="clientId" [(ngModel)]="editingVehicle.clientId" required>
+            <option value="0">Izaberite klijenta</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.naziv }}
+            </option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

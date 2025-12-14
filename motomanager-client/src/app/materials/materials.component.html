@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="header">
+    <h1>Šifarnik materijala</h1>
+    <button class="btn btn-primary" (click)="showAddMaterialForm()">Dodaj materijal</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Učitavanje...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Naziv</th>
+          <th>Jedinična cena</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let material of materials">
+          <td>{{ material.naziv }}</td>
+          <td>{{ material.jedinicnaCena | number:'1.2-2' }} RSD</td>
+          <td class="actions">
+            <button class="btn btn-edit" (click)="editMaterial(material)">Izmeni</button>
+            <button class="btn btn-delete" (click)="deleteMaterial(material.id)">Obriši</button>
+          </td>
+        </tr>
+        <tr *ngIf="materials.length === 0 && !loading">
+          <td colspan="3" style="text-align: center;">Nema materijala</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Form Modal -->
+  <div class="modal" *ngIf="showAddForm" (click)="cancelAdd()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Dodaj materijal</h2>
+      <form (ngSubmit)="addMaterial()">
+        <div class="form-group">
+          <label for="naziv">Naziv:</label>
+          <input type="text" id="naziv" [(ngModel)]="newMaterial.naziv" name="naziv" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="jedinicnaCena">Jedinična cena:</label>
+          <input type="number" id="jedinicnaCena" [(ngModel)]="newMaterial.jedinicnaCena" name="jedinicnaCena" min="0" step="0.01" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelAdd()">Otkaži</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Form Modal -->
+  <div class="modal" *ngIf="editingMaterial" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Izmeni materijal</h2>
+      <form (ngSubmit)="updateMaterial()">
+        <div class="form-group">
+          <label for="editNaziv">Naziv:</label>
+          <input type="text" id="editNaziv" [(ngModel)]="updatedMaterial.naziv" name="naziv" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editJedinicnaCena">Jedinična cena:</label>
+          <input type="number" id="editJedinicnaCena" [(ngModel)]="updatedMaterial.jedinicnaCena" name="jedinicnaCena" min="0" step="0.01" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Otkaži</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

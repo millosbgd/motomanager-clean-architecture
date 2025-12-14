@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MotoManager.Api.props" />
+</Project>

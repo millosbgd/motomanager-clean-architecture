@@ -1,0 +1,198 @@
+<div class="container">
+  <header>
+    <h1>Klijenti</h1>
+    <div class="list-header">
+      <button class="btn btn-primary" (click)="showAddClientForm()">
+        + Dodaj novog klijenta
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="loading">Učitavanje...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <section class="client-list">
+    <table *ngIf="clients.length > 0">
+      <thead>
+        <tr>
+          <th>Naziv</th>
+          <th>Adresa</th>
+          <th>Grad</th>
+          <th>PIB</th>
+          <th>Telefon</th>
+          <th>Email</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of clients">
+          <td>{{ client.naziv }}</td>
+          <td>{{ client.adresa }}</td>
+          <td>{{ client.grad }}</td>
+          <td>{{ client.pib || '-' }}</td>
+          <td>{{ client.telefon }}</td>
+          <td>{{ client.email }}</td>
+          <td class="actions">
+            <button class="btn btn-primary btn-small" (click)="showVehicles(client)">Vozila</button>
+            <button class="btn btn-edit" (click)="editClient(client)">Izmeni</button>
+            <button class="btn btn-delete" (click)="deleteClient(client.id)">Obriši</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="clients.length === 0 && !loading" class="no-data">Nema klijenata u bazi.</p>
+  </section>
+
+  <!-- Modal za dodavanje klijenta -->
+  <div *ngIf="showAddForm" class="modal-overlay" (click)="cancelAdd()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Dodaj novog klijenta</h2>
+        <button class="close-btn" (click)="cancelAdd()">&times;</button>
+      </div>
+      <form (ngSubmit)="addClient()">
+        <div class="form-group">
+          <label for="naziv">Naziv:</label>
+          <input type="text" id="naziv" name="naziv" [(ngModel)]="newClient.naziv" required />
+        </div>
+        <div class="form-group">
+          <label for="adresa">Adresa:</label>
+          <input type="text" id="adresa" name="adresa" [(ngModel)]="newClient.adresa" required />
+        </div>
+        <div class="form-group">
+          <label for="grad">Grad:</label>
+          <input type="text" id="grad" name="grad" [(ngModel)]="newClient.grad" required />
+        </div>
+        <div class="form-group">
+          <label for="pib">PIB (opciono):</label>
+          <input type="text" id="pib" name="pib" [(ngModel)]="newClient.pib" />
+        </div>
+        <div class="form-group">
+          <label for="telefon">Telefon:</label>
+          <input type="text" id="telefon" name="telefon" [(ngModel)]="newClient.telefon" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" [(ngModel)]="newClient.email" required />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Dodaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelAdd()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal za ažuriranje klijenta -->
+  <div *ngIf="editingClient" class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Izmeni klijenta</h2>
+        <button class="close-btn" (click)="cancelEdit()">&times;</button>
+      </div>
+      <form (ngSubmit)="updateClient()">
+        <div class="form-group">
+          <label for="edit-naziv">Naziv:</label>
+          <input type="text" id="edit-naziv" name="naziv" [(ngModel)]="updatedClient.naziv" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-adresa">Adresa:</label>
+          <input type="text" id="edit-adresa" name="adresa" [(ngModel)]="updatedClient.adresa" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-grad">Grad:</label>
+          <input type="text" id="edit-grad" name="grad" [(ngModel)]="updatedClient.grad" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-pib">PIB (opciono):</label>
+          <input type="text" id="edit-pib" name="pib" [(ngModel)]="updatedClient.pib" />
+        </div>
+        <div class="form-group">
+          <label for="edit-telefon">Telefon:</label>
+          <input type="text" id="edit-telefon" name="telefon" [(ngModel)]="updatedClient.telefon" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-email">Email:</label>
+          <input type="email" id="edit-email" name="email" [(ngModel)]="updatedClient.email" required />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal za vozila klijenta -->
+  <div *ngIf="viewingClientVehicles" class="modal-overlay" (click)="closeVehicles()">
+    <div class="modal-content large-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Vozila - {{ viewingClientVehicles.naziv }}</h2>
+        <button class="close-btn" (click)="closeVehicles()">&times;</button>
+      </div>
+      
+      <div class="vehicles-section">
+        <button class="btn btn-primary" (click)="showAddVehicleForm()">+ Dodaj novo vozilo</button>
+        
+        <table *ngIf="clientVehicles.length > 0" style="margin-top: 20px;">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Tablica</th>
+              <th>Akcije</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vehicle of clientVehicles">
+              <td>{{ vehicle.model }}</td>
+              <td>{{ vehicle.plate }}</td>
+              <td class="actions">
+                <button class="btn btn-edit btn-small" (click)="editVehicle(vehicle)">Izmeni</button>
+                <button class="btn btn-delete btn-small" (click)="deleteVehicle(vehicle.id)">Obriši</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="clientVehicles.length === 0" class="no-data">Nema vozila za ovog klijenta.</p>
+      </div>
+
+      <!-- Forma za dodavanje vozila -->
+      <div *ngIf="showVehicleAddForm" class="inline-form" style="margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+        <h3>Dodaj novo vozilo</h3>
+        <form (ngSubmit)="addVehicle()">
+          <div class="form-group">
+            <label for="vehicle-model">Model:</label>
+            <input type="text" id="vehicle-model" name="model" [(ngModel)]="newVehicle.model" required />
+          </div>
+          <div class="form-group">
+            <label for="vehicle-plate">Tablica:</label>
+            <input type="text" id="vehicle-plate" name="plate" [(ngModel)]="newVehicle.plate" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+            <button type="button" class="btn btn-cancel" (click)="cancelAddVehicle()">Odustani</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Forma za izmenu vozila -->
+      <div *ngIf="editingVehicle" class="inline-form" style="margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+        <h3>Izmeni vozilo</h3>
+        <form (ngSubmit)="updateVehicle()">
+          <div class="form-group">
+            <label for="edit-vehicle-model">Model:</label>
+            <input type="text" id="edit-vehicle-model" name="model" [(ngModel)]="editingVehicle.model" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-vehicle-plate">Tablica:</label>
+            <input type="text" id="edit-vehicle-plate" name="plate" [(ngModel)]="editingVehicle.plate" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Sačuvaj</button>
+            <button type="button" class="btn btn-cancel" (click)="cancelEditVehicle()">Odustani</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

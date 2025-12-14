@@ -1,0 +1,245 @@
+<div class="container">
+  <div class="header">
+    <h1>Servisni nalozi</h1>
+    <button class="btn btn-primary" (click)="showAddOrderForm()">Dodaj nalog</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Učitavanje...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Broj naloga</th>
+          <th>Datum</th>
+          <th>Klijent</th>
+          <th>Vozilo</th>
+          <th>Opis rada</th>
+          <th>Kilometraža</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of serviceOrders">
+          <td>{{ order.brojNaloga }}</td>
+          <td>{{ formatDate(order.datum) }}</td>
+          <td>{{ order.clientNaziv }}</td>
+          <td>{{ order.vehicleModel }} - {{ order.vehiclePlate }}</td>
+          <td>{{ order.opisRada }}</td>
+          <td>{{ order.kilometraza }} km</td>
+          <td class="actions">
+            <button class="btn btn-edit" (click)="editOrder(order)">Izmeni</button>
+            <button class="btn btn-delete" (click)="deleteOrder(order.id)">Obriši</button>
+          </td>
+        </tr>
+        <tr *ngIf="serviceOrders.length === 0 && !loading">
+          <td colspan="7" style="text-align: center;">Nema servisnih naloga</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Form Modal -->
+  <div class="modal" *ngIf="showAddForm" (click)="cancelAdd()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Dodaj servisni nalog</h2>
+      <form (ngSubmit)="addOrder()">
+        <div class="form-group">
+          <label for="brojNaloga">Broj naloga:</label>
+          <input type="text" id="brojNaloga" [(ngModel)]="newOrder.brojNaloga" name="brojNaloga" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="datum">Datum:</label>
+          <input type="date" id="datum" [(ngModel)]="newOrder.datum" name="datum" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="clientId">Klijent:</label>
+          <select id="clientId" [(ngModel)]="newOrder.clientId" name="clientId" required>
+            <option [ngValue]="0">-- Izaberite klijenta --</option>
+            <option *ngFor="let client of clients" [ngValue]="client.id">{{ client.naziv }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="vehicleId">Vozilo:</label>
+          <select id="vehicleId" [(ngModel)]="newOrder.vehicleId" name="vehicleId" required>
+            <option [ngValue]="0">-- Izaberite vozilo --</option>
+            <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+              {{ vehicle.model }} - {{ vehicle.plate }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="opisRada">Opis rada:</label>
+          <textarea id="opisRada" [(ngModel)]="newOrder.opisRada" name="opisRada" rows="4" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="kilometraza">Kilometraža:</label>
+          <input type="number" id="kilometraza" [(ngModel)]="newOrder.kilometraza" name="kilometraza" min="0" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelAdd()">Otkaži</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Form Modal -->
+  <div class="modal" *ngIf="editingOrder" (click)="cancelEdit()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <h2>Izmeni servisni nalog</h2>
+      
+      <!-- Tabs -->
+      <div class="tabs">
+        <button type="button" class="tab" [class.active]="activeTab === 'info'" (click)="switchTab('info')">
+          Informacije
+        </button>
+        <button type="button" class="tab" [class.active]="activeTab === 'labor'" (click)="switchTab('labor')">
+          Radovi
+        </button>
+        <button type="button" class="tab" [class.active]="activeTab === 'material'" (click)="switchTab('material')">
+          Materijali
+        </button>
+      </div>
+
+      <!-- Info Tab -->
+      <div *ngIf="activeTab === 'info'">
+        <form (ngSubmit)="updateOrder()">
+          <div class="form-group">
+            <label for="editBrojNaloga">Broj naloga:</label>
+          <input type="text" id="editBrojNaloga" [(ngModel)]="updatedOrder.brojNaloga" name="brojNaloga" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editDatum">Datum:</label>
+          <input type="date" id="editDatum" [(ngModel)]="updatedOrder.datum" name="datum" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editClientId">Klijent:</label>
+          <select id="editClientId" [(ngModel)]="updatedOrder.clientId" name="clientId" required>
+            <option [ngValue]="0">-- Izaberite klijenta --</option>
+            <option *ngFor="let client of clients" [ngValue]="client.id">{{ client.naziv }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="editVehicleId">Vozilo:</label>
+          <select id="editVehicleId" [(ngModel)]="updatedOrder.vehicleId" name="vehicleId" required>
+            <option [ngValue]="0">-- Izaberite vozilo --</option>
+            <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+              {{ vehicle.model }} - {{ vehicle.plate }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="editOpisRada">Opis rada:</label>
+          <textarea id="editOpisRada" [(ngModel)]="updatedOrder.opisRada" name="opisRada" rows="4" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="editKilometraza">Kilometraža:</label>
+          <input type="number" id="editKilometraza" [(ngModel)]="updatedOrder.kilometraza" name="kilometraza" min="0" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Otkaži</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Labor Tab -->
+    <div *ngIf="activeTab === 'labor'">
+      <div class="tab-content">
+        <h3>Dodaj rad</h3>
+        <div class="inline-form">
+          <input type="text" [(ngModel)]="newLabor.opisRadova" placeholder="Opis radova" required>
+          <input type="number" [(ngModel)]="newLabor.ukupnoVreme" placeholder="Ukupno vreme (h)" min="0" step="0.5" required>
+          <input type="number" [(ngModel)]="newLabor.cena" placeholder="Cena" min="0" step="0.01" required>
+          <button type="button" class="btn btn-primary" (click)="addLabor()">Dodaj</button>
+        </div>
+
+        <table class="inner-table">
+          <thead>
+            <tr>
+              <th>Opis radova</th>
+              <th>Vreme (h)</th>
+              <th>Cena</th>
+              <th>Akcije</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let labor of labors">
+              <td>{{ labor.opisRadova }}</td>
+              <td>{{ labor.ukupnoVreme }}</td>
+              <td>{{ labor.cena | number:'1.2-2' }} RSD</td>
+              <td>
+                <button type="button" class="btn btn-delete btn-small" (click)="deleteLabor(labor.id)">Obriši</button>
+              </td>
+            </tr>
+            <tr *ngIf="labors.length === 0">
+              <td colspan="4" style="text-align: center;">Nema radova</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Material Tab -->
+    <div *ngIf="activeTab === 'material'">
+      <div class="tab-content">
+        <h3>Dodaj materijal</h3>
+        <div class="inline-form">
+          <select [(ngModel)]="newMaterial.materialId" (change)="onMaterialSelected()" required>
+            <option value="0">Izaberite materijal</option>
+            <option *ngFor="let mat of allMaterials" [value]="mat.id">
+              {{ mat.naziv }} - {{ mat.jedinicnaCena | number:'1.2-2' }} RSD
+            </option>
+          </select>
+          <input type="number" [(ngModel)]="newMaterial.kolicina" placeholder="Količina" min="0" step="0.01" 
+                 (ngModelChange)="calculateMaterialTotal()" required>
+          <input type="number" [(ngModel)]="newMaterial.jedinicnaCena" placeholder="Jedinična cena" min="0" step="0.01" readonly>
+          <span class="total-display">Ukupno: {{ newMaterial.ukupnaCena | number:'1.2-2' }} RSD</span>
+          <button type="button" class="btn btn-primary" (click)="addMaterial()">Dodaj</button>
+        </div>
+
+        <table class="inner-table">
+          <thead>
+            <tr>
+              <th>Naziv</th>
+              <th>Količina</th>
+              <th>Jedinična cena</th>
+              <th>Ukupna cena</th>
+              <th>Akcije</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let material of materials">
+              <td>{{ material.materialNaziv }}</td>
+              <td>{{ material.kolicina }}</td>
+              <td>{{ material.jedinicnaCena | number:'1.2-2' }} RSD</td>
+              <td>{{ material.ukupnaCena | number:'1.2-2' }} RSD</td>
+              <td>
+                <button type="button" class="btn btn-delete btn-small" (click)="deleteMaterial(material.id)">Obriši</button>
+              </td>
+            </tr>
+            <tr *ngIf="materials.length === 0">
+              <td colspan="5" style="text-align: center;">Nema materijala</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div>

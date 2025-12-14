@@ -1,0 +1,25 @@
+<div class="app-layout">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1>MotoManager</h1>
+    </div>
+    <ul class="navbar-menu">
+      <li><a routerLink="/vehicles" routerLinkActive="active">Vozila</a></li>
+      <li><a routerLink="/clients" routerLinkActive="active">Klijenti</a></li>
+      <li><a routerLink="/service-orders" routerLinkActive="active">Servisni nalozi</a></li>
+      <li><a routerLink="/materials" routerLinkActive="active">Materijali</a></li>
+    </ul>
+    <div class="navbar-auth">
+      @if (auth.isAuthenticated$ | async) {
+        <span class="user-info">{{ (auth.user$ | async)?.name || (auth.user$ | async)?.email }}</span>
+        <button class="btn-auth" (click)="logout()">Odjavi se</button>
+      } @else {
+        <button class="btn-auth" (click)="login()">Prijavi se</button>
+      }
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

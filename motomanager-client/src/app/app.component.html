@@ -1,0 +1,135 @@
+<div class="container">
+  <header>
+    <h1>🏍️ {{ title }}</h1>
+    <p>Upravljanje vozilima</p>
+  </header>
+
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    Učitavanje...
+  </div>
+
+  <!-- Lista vozila -->
+  <section class="vehicles-list">
+    <div class="list-header">
+      <h2>Lista vozila</h2>
+      <button 
+        class="btn btn-primary btn-add" 
+        (click)="showAddVehicleForm()" 
+        [disabled]="loading">
+        ➕ Dodaj novo vozilo
+      </button>
+    </div>
+    
+    <div *ngIf="vehicles.length === 0 && !loading" class="no-vehicles">
+      Nema vozila. Dodajte prvo vozilo!
+    </div>
+    
+    <table *ngIf="vehicles.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Model</th>
+          <th>Tablica</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles">
+          <td>{{ vehicle.id }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td>{{ vehicle.plate }}</td>
+          <td class="actions">
+            <button 
+              class="btn btn-edit" 
+              (click)="editVehicle(vehicle)" 
+              [disabled]="loading">
+              ✏️ Izmeni
+            </button>
+            <button 
+              class="btn btn-delete" 
+              (click)="deleteVehicle(vehicle.id)" 
+              [disabled]="loading">
+              🗑️ Obriši
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- Modal za dodavanje novog vozila -->
+<div class="modal-overlay" *ngIf="showAddForm" (click)="cancelAdd()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Dodaj novo vozilo</h2>
+      <button class="close-btn" (click)="cancelAdd()">&times;</button>
+    </div>
+    <form (ngSubmit)="addVehicle()" class="vehicle-form">
+      <div class="form-group">
+        <label for="model">Model:</label>
+        <input 
+          type="text" 
+          id="model" 
+          [(ngModel)]="newVehicle.model" 
+          name="model" 
+          placeholder="npr. Honda CBR600RR"
+          required>
+      </div>
+      <div class="form-group">
+        <label for="plate">Registarska tablica:</label>
+        <input 
+          type="text" 
+          id="plate" 
+          [(ngModel)]="newVehicle.plate" 
+          name="plate" 
+          placeholder="npr. BG-123-AB"
+          required>
+      </div>
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">Dodaj vozilo</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelAdd()" [disabled]="loading">Otkaži</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal za izmenu vozila -->
+<div class="modal-overlay" *ngIf="editingVehicle" (click)="cancelEdit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Izmeni vozilo</h2>
+      <button class="close-btn" (click)="cancelEdit()">&times;</button>
+    </div>
+    <form (ngSubmit)="updateVehicle()" class="vehicle-form">
+      <div class="form-group">
+        <label for="editModel">Model:</label>
+        <input 
+          type="text" 
+          id="editModel" 
+          [(ngModel)]="editingVehicle.model" 
+          name="editModel" 
+          required>
+      </div>
+      <div class="form-group">
+        <label for="editPlate">Registarska tablica:</label>
+        <input 
+          type="text" 
+          id="editPlate" 
+          [(ngModel)]="editingVehicle.plate" 
+          name="editPlate" 
+          required>
+      </div>
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">Sačuvaj izmene</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()" [disabled]="loading">Otkaži</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<router-outlet />
