@@ -32,6 +32,8 @@ jobs:
           app_location: "/motomanager-client"
           api_location: ""
           output_location: "dist/motomanager-client/browser"
+        env:
+          NG_BUILD_ENV: production
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
