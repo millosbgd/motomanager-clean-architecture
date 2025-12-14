@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ServiceOrderLabor, CreateServiceOrderLaborRequest, UpdateServiceOrderLaborRequest } from '../models/service-order-labor.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceOrderLaborService {
-  private apiUrl = 'http://localhost:10582/api/serviceorderlabors';
+  private apiUrl = `${environment.apiUrl}/serviceorderlabors`;
 
   constructor(private http: HttpClient) { }
 
