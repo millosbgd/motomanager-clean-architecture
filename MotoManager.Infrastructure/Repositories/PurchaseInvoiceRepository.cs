@@ -14,12 +14,39 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<PurchaseInvoice>> GetAllAsync()
+    public async Task<IEnumerable<PurchaseInvoice>> GetAllAsync(
+        DateTime? datumOd = null, 
+        DateTime? datumDo = null, 
+        int? dobavljacId = null, 
+        int? voziloId = null)
     {
-        return await _context.PurchaseInvoices
+        var query = _context.PurchaseInvoices
             .Include(i => i.Dobavljac)
             .Include(i => i.Vozilo)
-            .ToListAsync();
+            .AsQueryable();
+        
+        // SQL WHERE clause filtering
+        if (datumOd.HasValue)
+        {
+            query = query.Where(i => i.Datum >= datumOd.Value);
+        }
+        
+        if (datumDo.HasValue)
+        {
+            query = query.Where(i => i.Datum <= datumDo.Value);
+        }
+        
+        if (dobavljacId.HasValue && dobavljacId.Value > 0)
+        {
+            query = query.Where(i => i.DobavljacId == dobavljacId.Value);
+        }
+        
+        if (voziloId.HasValue && voziloId.Value > 0)
+        {
+            query = query.Where(i => i.VoziloId == voziloId.Value);
+        }
+        
+        return await query.ToListAsync();
     }
 
     public async Task<PurchaseInvoice?> GetByIdAsync(int id)

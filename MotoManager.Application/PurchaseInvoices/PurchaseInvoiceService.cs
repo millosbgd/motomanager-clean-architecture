@@ -18,28 +18,8 @@ public class PurchaseInvoiceService
         int? dobavljacId = null, 
         int? voziloId = null)
     {
-        var invoices = await _purchaseInvoiceRepository.GetAllAsync();
-        
-        // Server-side filtering
-        if (datumOd.HasValue)
-        {
-            invoices = invoices.Where(i => i.Datum >= datumOd.Value);
-        }
-        
-        if (datumDo.HasValue)
-        {
-            invoices = invoices.Where(i => i.Datum <= datumDo.Value);
-        }
-        
-        if (dobavljacId.HasValue && dobavljacId.Value > 0)
-        {
-            invoices = invoices.Where(i => i.DobavljacId == dobavljacId.Value);
-        }
-        
-        if (voziloId.HasValue && voziloId.Value > 0)
-        {
-            invoices = invoices.Where(i => i.VoziloId == voziloId.Value);
-        }
+        // Filtering happens in Repository (SQL WHERE clause)
+        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId);
         
         return invoices.Select(i => new PurchaseInvoiceDto(
             i.Id, 

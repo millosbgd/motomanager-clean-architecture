@@ -78,3 +78,10 @@ C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-archite
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\obj\Release\net8.0\MotoManager.Api.genruntimeconfig.cache
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\obj\Release\net8.0\ref\MotoManager.Api.dll
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\obj\Release\net8.0\MotoManager.Api.sourcelink.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\web.config
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\appsettings.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\appsettings.Production.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\MotoManager.Api.deps.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\MotoManager.Api.runtimeconfig.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\package-lock.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\package.json
