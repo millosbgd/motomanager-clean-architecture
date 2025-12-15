@@ -74,7 +74,8 @@ builder.Services.AddCors(options =>
                 "https://lively-dune-0073f1003.3.azurestaticapps.net"
             )
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
         });
 });
 
@@ -88,6 +89,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
+// CORS must be before Authentication/Authorization
 app.UseCors(AllowLocalAngular);
 
 app.UseAuthentication();
