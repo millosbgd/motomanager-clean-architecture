@@ -16,14 +16,14 @@
         <label for="filterDobavljac">Dobavljač:</label>
         <select id="filterDobavljac" [(ngModel)]="filterDobavljacId" (ngModelChange)="applyFilters()">
           <option [ngValue]="null">-- Svi dobavljači --</option>
-          <option *ngFor="let client of clients" [value]="client.id">{{ client.naziv }}</option>
+          <option *ngFor="let client of clients" [ngValue]="client.id">{{ client.naziv }}</option>
         </select>
       </div>
       <div class="filter-group">
         <label for="filterVozilo">Vozilo:</label>
         <select id="filterVozilo" [(ngModel)]="filterVoziloId" (ngModelChange)="applyFilters()">
           <option [ngValue]="null">-- Sva vozila --</option>
-          <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">{{ vehicle.model }} ({{ vehicle.plate }})</option>
+          <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">{{ vehicle.model }} ({{ vehicle.plate }})</option>
         </select>
       </div>
       <div class="filter-actions">
