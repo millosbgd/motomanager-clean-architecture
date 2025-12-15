@@ -8,6 +8,7 @@ using MotoManager.Application.ServiceOrders;
 using MotoManager.Application.ServiceOrderLabors;
 using MotoManager.Application.ServiceOrderMaterials;
 using MotoManager.Application.Materials;
+using MotoManager.Application.PurchaseInvoices;
 using MotoManager.Infrastructure.Data;
 using MotoManager.Infrastructure.Repositories;
 
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IServiceOrderMaterialRepository, ServiceOrderMaterial
 builder.Services.AddScoped<ServiceOrderMaterialService>();
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<MaterialService>();
+builder.Services.AddScoped<IPurchaseInvoiceRepository, PurchaseInvoiceRepository>();
+builder.Services.AddScoped<PurchaseInvoiceService>();
 
 // Auth0 JWT Authentication
 var domain = builder.Configuration["Auth0:Domain"];

@@ -1,0 +1,172 @@
+<div class="container">
+  <header>
+    <h1>Računi dobavljača</h1>
+    <div class="list-header">
+      <button class="btn btn-primary" (click)="showAddInvoiceForm()">
+        + Dodaj novi račun dobavljača
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="loading">Učitavanje...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <section class="invoice-list">
+    <table *ngIf="invoices.length > 0">
+      <thead>
+        <tr>
+          <th>Broj računa</th>
+          <th>Datum</th>
+          <th>Dobavljač</th>
+          <th>Vozilo</th>
+          <th>Iznos neto</th>
+          <th>PDV</th>
+          <th>Bruto iznos</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of invoices">
+          <td>{{ invoice.brojRacuna }}</td>
+          <td>{{ formatDate(invoice.datum) }}</td>
+          <td>{{ invoice.dobavljacNaziv }}</td>
+          <td>{{ invoice.voziloModel ? invoice.voziloModel + ' (' + invoice.voziloPlate + ')' : '-' }}</td>
+          <td>{{ invoice.iznosNeto | number:'1.2-2' }} RSD</td>
+          <td>{{ invoice.iznosPDV | number:'1.2-2' }} RSD</td>
+          <td><strong>{{ invoice.iznosBruto | number:'1.2-2' }} RSD</strong></td>
+          <td class="actions">
+            <button class="btn btn-edit" (click)="editInvoice(invoice)">Izmeni</button>
+            <button class="btn btn-delete" (click)="deleteInvoice(invoice.id)">Obriši</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="invoices.length === 0 && !loading" class="no-data">Nema računa dobavljača u bazi.</p>
+  </section>
+
+  <!-- Modal za dodavanje ulaznog računa -->
+  <div *ngIf="showAddForm" class="modal-overlay" (click)="cancelAdd()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Dodaj novi račun dobavljača</h2>
+        <button class="close-btn" (click)="cancelAdd()">&times;</button>
+      </div>
+      <form (ngSubmit)="addInvoice()">
+        <div class="form-group">
+          <label for="brojRacuna">Broj računa:</label>
+          <input type="text" id="brojRacuna" name="brojRacuna" [(ngModel)]="newInvoice.brojRacuna" required />
+        </div>
+        <div class="form-group">
+          <label for="datum">Datum:</label>
+          <input type="date" id="datum" name="datum" 
+                 [ngModel]="newInvoice.datum | date:'yyyy-MM-dd'" 
+                 (ngModelChange)="newInvoice.datum = $event" required />
+        </div>
+        <div class="form-group">
+          <label for="dobavljacId">Dobavljač:</label>
+          <select id="dobavljacId" name="dobavljacId" [(ngModel)]="newInvoice.dobavljacId" required>
+            <option value="0">-- Izaberite dobavljača --</option>
+            <option *ngFor="let client of clients" [value]="client.id">{{ client.naziv }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="voziloId">Vozilo (opciono):</label>
+          <select id="voziloId" name="voziloId" [(ngModel)]="newInvoice.voziloId">
+            <option [ngValue]="null">-- Bez vozila --</option>
+            <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
+              {{ vehicle.model }} ({{ vehicle.plate }})
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="iznosNeto">Iznos neto (RSD):</label>
+          <input type="number" id="iznosNeto" name="iznosNeto" 
+                 [(ngModel)]="newInvoice.iznosNeto" 
+                 (ngModelChange)="calculateAmounts()" 
+                 step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="iznosPDV">PDV (RSD):</label>
+          <input type="number" id="iznosPDV" name="iznosPDV" 
+                 [(ngModel)]="newInvoice.iznosPDV" 
+                 (ngModelChange)="calculateAmounts()" 
+                 step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="iznosBruto">Bruto iznos (RSD):</label>
+          <input type="number" id="iznosBruto" name="iznosBruto" 
+                 [(ngModel)]="newInvoice.iznosBruto" 
+                 step="0.01" readonly />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Dodaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelAdd()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal za ažuriranje ulaznog računa -->
+  <div *ngIf="editingInvoice" class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Izmeni račun dobavljača</h2>
+        <button class="close-btn" (click)="cancelEdit()">&times;</button>
+      </div>
+      <form (ngSubmit)="updateInvoice()">
+        <div class="form-group">
+          <label for="edit-brojRacuna">Broj računa:</label>
+          <input type="text" id="edit-brojRacuna" name="brojRacuna" 
+                 [(ngModel)]="updatedInvoice.brojRacuna" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-datum">Datum:</label>
+          <input type="date" id="edit-datum" name="datum" 
+                 [ngModel]="updatedInvoice.datum | date:'yyyy-MM-dd'" 
+                 (ngModelChange)="updatedInvoice.datum = $event" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-dobavljacId">Dobavljač:</label>
+          <select id="edit-dobavljacId" name="dobavljacId" 
+                  [(ngModel)]="updatedInvoice.dobavljacId" required>
+            <option value="0">-- Izaberite dobavljača --</option>
+            <option *ngFor="let client of clients" [value]="client.id">{{ client.naziv }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-voziloId">Vozilo (opciono):</label>
+          <select id="edit-voziloId" name="voziloId" [(ngModel)]="updatedInvoice.voziloId">
+            <option [ngValue]="null">-- Bez vozila --</option>
+            <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
+              {{ vehicle.model }} ({{ vehicle.plate }})
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-iznosNeto">Iznos neto (RSD):</label>
+          <input type="number" id="edit-iznosNeto" name="iznosNeto" 
+                 [(ngModel)]="updatedInvoice.iznosNeto" 
+                 (ngModelChange)="calculateAmounts()" 
+                 step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-iznosPDV">PDV (RSD):</label>
+          <input type="number" id="edit-iznosPDV" name="iznosPDV" 
+                 [(ngModel)]="updatedInvoice.iznosPDV" 
+                 (ngModelChange)="calculateAmounts()" 
+                 step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-iznosBruto">Bruto iznos (RSD):</label>
+          <input type="number" id="edit-iznosBruto" name="iznosBruto" 
+                 [(ngModel)]="updatedInvoice.iznosBruto" 
+                 step="0.01" readonly />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Odustani</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

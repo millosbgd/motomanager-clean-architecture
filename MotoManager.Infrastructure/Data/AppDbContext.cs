@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<ServiceOrderLabor> ServiceOrderLabors => Set<ServiceOrderLabor>();
     public DbSet<ServiceOrderMaterial> ServiceOrderMaterials => Set<ServiceOrderMaterial>();
     public DbSet<Material> Materials => Set<Material>();
+    public DbSet<PurchaseInvoice> PurchaseInvoices => Set<PurchaseInvoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -144,6 +145,38 @@ public class AppDbContext : DbContext
             entity.Property(m => m.JedinicnaCena)
                   .HasPrecision(18, 2)
                   .IsRequired();
+        });
+
+        modelBuilder.Entity<PurchaseInvoice>(entity =>
+        {
+            entity.ToTable("PurchaseInvoices");
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.BrojRacuna)
+                  .HasMaxLength(100)
+                  .IsRequired();
+            entity.Property(i => i.Datum)
+                  .IsRequired();
+            entity.Property(i => i.DobavljacId)
+                  .IsRequired();
+            entity.Property(i => i.IznosNeto)
+                  .HasPrecision(18, 2)
+                  .IsRequired();
+            entity.Property(i => i.IznosPDV)
+                  .HasPrecision(18, 2)
+                  .IsRequired();
+            entity.Property(i => i.IznosBruto)
+                  .HasPrecision(18, 2)
+                  .IsRequired();
+            
+            entity.HasOne(i => i.Dobavljac)
+                  .WithMany()
+                  .HasForeignKey(i => i.DobavljacId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(i => i.Vozilo)
+                  .WithMany()
+                  .HasForeignKey(i => i.VoziloId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
         });
     }
