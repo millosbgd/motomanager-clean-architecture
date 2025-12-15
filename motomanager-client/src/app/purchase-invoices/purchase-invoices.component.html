@@ -1,6 +1,36 @@
 <div class="container">
   <header>
     <h1>Računi dobavljača</h1>
+    
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <label for="filterDateFrom">Datum od:</label>
+        <input type="date" id="filterDateFrom" [(ngModel)]="filterDateFrom" (ngModelChange)="applyFilters()" />
+      </div>
+      <div class="filter-group">
+        <label for="filterDateTo">Datum do:</label>
+        <input type="date" id="filterDateTo" [(ngModel)]="filterDateTo" (ngModelChange)="applyFilters()" />
+      </div>
+      <div class="filter-group">
+        <label for="filterDobavljac">Dobavljač:</label>
+        <select id="filterDobavljac" [(ngModel)]="filterDobavljacId" (ngModelChange)="applyFilters()">
+          <option [ngValue]="null">-- Svi dobavljači --</option>
+          <option *ngFor="let client of clients" [value]="client.id">{{ client.naziv }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filterVozilo">Vozilo:</label>
+        <select id="filterVozilo" [(ngModel)]="filterVoziloId" (ngModelChange)="applyFilters()">
+          <option [ngValue]="null">-- Sva vozila --</option>
+          <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">{{ vehicle.model }} ({{ vehicle.plate }})</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-secondary" (click)="clearFilters()">Obriši filtere</button>
+      </div>
+    </div>
+    
     <div class="list-header">
       <button class="btn btn-primary" (click)="showAddInvoiceForm()">
         + Dodaj novi račun dobavljača
@@ -26,7 +56,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let invoice of invoices">
+        <tr *ngFor="let invoice of filteredInvoices">
           <td>{{ invoice.brojRacuna }}</td>
           <td>{{ formatDate(invoice.datum) }}</td>
           <td>{{ invoice.dobavljacNaziv }}</td>
@@ -50,7 +80,7 @@
         </tr>
       </tfoot>
     </table>
-    <p *ngIf="invoices.length === 0 && !loading" class="no-data">Nema računa dobavljača u bazi.</p>
+    <p *ngIf="filteredInvoices.length === 0 && !loading" class="no-data">Nema računa dobavljača koji odgovaraju filterima.</p>
   </section>
 
   <!-- Modal za dodavanje ulaznog računa -->

@@ -17,10 +17,17 @@ import { Vehicle } from '../models/vehicle.model';
 })
 export class PurchaseInvoicesComponent implements OnInit {
   invoices: PurchaseInvoice[] = [];
+  filteredInvoices: PurchaseInvoice[] = [];
   clients: Client[] = [];
   vehicles: Vehicle[] = [];
   loading = false;
   error: string | null = null;
+  
+  // Filters
+  filterDateFrom: string = '';
+  filterDateTo: string = '';
+  filterDobavljacId: number | null = null;
+  filterVoziloId: number | null = null;
   
   showAddForm = false;
   editingInvoice: PurchaseInvoice | null = null;
@@ -64,6 +71,7 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.purchaseInvoiceService.getAllPurchaseInvoices().subscribe({
       next: (data) => {
         this.invoices = data;
+        this.filteredInvoices = data;
         this.loading = false;
       },
       error: (err) => {
@@ -207,15 +215,61 @@ export class PurchaseInvoicesComponent implements OnInit {
     return new Date(date).toLocaleDateString('sr-RS');
   }
 
-  getTotalNeto(): number {
-    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosNeto, 0);
+  getTotalNeto()filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosNeto, 0);
   }
 
   getTotalPDV(): number {
-    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosPDV, 0);
+    return this.filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosPDV, 0);
   }
 
   getTotalBruto(): number {
+    return this.filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosBruto, 0);
+  }
+
+  applyFilters(): void {
+    this.filteredInvoices = this.invoices.filter(invoice => {
+      // Datum od filter
+      if (this.filterDateFrom) {
+        const invoiceDate = new Date(invoice.datum);
+        const dateFrom = new Date(this.filterDateFrom);
+        if (invoiceDate < dateFrom) {
+          return false;
+        }
+      }
+
+      // Datum do filter
+      if (this.filterDateTo) {
+        const invoiceDate = new Date(invoice.datum);
+        const dateTo = new Date(this.filterDateTo);
+        if (invoiceDate > dateTo) {
+          return false;
+        }
+      }
+
+      // Dobavljač filter
+      if (this.filterDobavljacId !== null && this.filterDobavljacId > 0) {
+        if (invoice.dobavljacId !== this.filterDobavljacId) {
+          return false;
+        }
+      }
+
+      // Vozilo filter
+      if (this.filterVoziloId !== null && this.filterVoziloId > 0) {
+        if (invoice.voziloId !== this.filterVoziloId) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
+  clearFilters(): void {
+    this.filterDateFrom = '';
+    this.filterDateTo = '';
+    this.filterDobavljacId = null;
+    this.filterVoziloId = null;
+    this.filteredInvoices = this.invoices
     return this.invoices.reduce((sum, invoice) => sum + invoice.iznosBruto, 0);
   }
 }
