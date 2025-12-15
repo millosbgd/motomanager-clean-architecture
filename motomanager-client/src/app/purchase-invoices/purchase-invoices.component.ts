@@ -68,7 +68,12 @@ export class PurchaseInvoicesComponent implements OnInit {
   loadInvoices(): void {
     this.loading = true;
     this.error = null;
-    this.purchaseInvoiceService.getAllPurchaseInvoices().subscribe({
+    this.purchaseInvoiceService.getAllPurchaseInvoices(
+      this.filterDateFrom || undefined,
+      this.filterDateTo || undefined,
+      this.filterDobavljacId,
+      this.filterVoziloId
+    ).subscribe({
       next: (data) => {
         this.invoices = data;
         this.filteredInvoices = data;
@@ -228,41 +233,8 @@ export class PurchaseInvoicesComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.filteredInvoices = this.invoices.filter(invoice => {
-      // Datum od filter
-      if (this.filterDateFrom) {
-        const invoiceDate = new Date(invoice.datum);
-        const dateFrom = new Date(this.filterDateFrom);
-        if (invoiceDate < dateFrom) {
-          return false;
-        }
-      }
-
-      // Datum do filter
-      if (this.filterDateTo) {
-        const invoiceDate = new Date(invoice.datum);
-        const dateTo = new Date(this.filterDateTo);
-        if (invoiceDate > dateTo) {
-          return false;
-        }
-      }
-
-      // Dobavljač filter
-      if (this.filterDobavljacId !== null && this.filterDobavljacId > 0) {
-        if (invoice.dobavljacId !== this.filterDobavljacId) {
-          return false;
-        }
-      }
-
-      // Vozilo filter
-      if (this.filterVoziloId !== null && this.filterVoziloId > 0) {
-        if (invoice.voziloId !== this.filterVoziloId) {
-          return false;
-        }
-      }
-
-      return true;
-    });
+    // Server-side filtering - reload data from API with filters
+    this.loadInvoices();
   }
 
   clearFilters(): void {
@@ -270,6 +242,6 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.filterDateTo = '';
     this.filterDobavljacId = null;
     this.filterVoziloId = null;
-    this.filteredInvoices = this.invoices;
+    this.loadInvoices();
   }
 }

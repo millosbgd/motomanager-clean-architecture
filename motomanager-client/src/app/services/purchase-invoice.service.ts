@@ -12,8 +12,28 @@ export class PurchaseInvoiceService {
 
   constructor(private http: HttpClient) { }
 
-  getAllPurchaseInvoices(): Observable<PurchaseInvoice[]> {
-    return this.http.get<PurchaseInvoice[]>(this.apiUrl);
+  getAllPurchaseInvoices(
+    datumOd?: string, 
+    datumDo?: string, 
+    dobavljacId?: number | null, 
+    voziloId?: number | null
+  ): Observable<PurchaseInvoice[]> {
+    let params: any = {};
+    
+    if (datumOd) {
+      params.datumOd = datumOd;
+    }
+    if (datumDo) {
+      params.datumDo = datumDo;
+    }
+    if (dobavljacId && dobavljacId > 0) {
+      params.dobavljacId = dobavljacId.toString();
+    }
+    if (voziloId && voziloId > 0) {
+      params.voziloId = voziloId.toString();
+    }
+    
+    return this.http.get<PurchaseInvoice[]>(this.apiUrl, { params });
   }
 
   getPurchaseInvoiceById(id: number): Observable<PurchaseInvoice> {

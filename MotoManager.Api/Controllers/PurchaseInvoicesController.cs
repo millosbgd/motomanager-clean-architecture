@@ -17,9 +17,13 @@ public class PurchaseInvoicesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PurchaseInvoiceDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<PurchaseInvoiceDto>>> GetAll(
+        [FromQuery] DateTime? datumOd = null,
+        [FromQuery] DateTime? datumDo = null,
+        [FromQuery] int? dobavljacId = null,
+        [FromQuery] int? voziloId = null)
     {
-        var invoices = await _purchaseInvoiceService.GetAllPurchaseInvoicesAsync();
+        var invoices = await _purchaseInvoiceService.GetAllPurchaseInvoicesAsync(datumOd, datumDo, dobavljacId, voziloId);
         return Ok(invoices);
     }
 

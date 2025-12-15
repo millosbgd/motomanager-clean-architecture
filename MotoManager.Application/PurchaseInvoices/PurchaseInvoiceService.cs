@@ -12,9 +12,35 @@ public class PurchaseInvoiceService
         _purchaseInvoiceRepository = purchaseInvoiceRepository;
     }
 
-    public async Task<IEnumerable<PurchaseInvoiceDto>> GetAllPurchaseInvoicesAsync()
+    public async Task<IEnumerable<PurchaseInvoiceDto>> GetAllPurchaseInvoicesAsync(
+        DateTime? datumOd = null, 
+        DateTime? datumDo = null, 
+        int? dobavljacId = null, 
+        int? voziloId = null)
     {
         var invoices = await _purchaseInvoiceRepository.GetAllAsync();
+        
+        // Server-side filtering
+        if (datumOd.HasValue)
+        {
+            invoices = invoices.Where(i => i.Datum >= datumOd.Value);
+        }
+        
+        if (datumDo.HasValue)
+        {
+            invoices = invoices.Where(i => i.Datum <= datumDo.Value);
+        }
+        
+        if (dobavljacId.HasValue && dobavljacId.Value > 0)
+        {
+            invoices = invoices.Where(i => i.DobavljacId == dobavljacId.Value);
+        }
+        
+        if (voziloId.HasValue && voziloId.Value > 0)
+        {
+            invoices = invoices.Where(i => i.VoziloId == voziloId.Value);
+        }
+        
         return invoices.Select(i => new PurchaseInvoiceDto(
             i.Id, 
             i.BrojRacuna, 
