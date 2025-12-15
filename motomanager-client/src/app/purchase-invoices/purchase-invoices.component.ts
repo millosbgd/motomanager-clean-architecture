@@ -206,4 +206,16 @@ export class PurchaseInvoicesComponent implements OnInit {
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('sr-RS');
   }
+
+  getTotalNeto(): number {
+    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosNeto, 0);
+  }
+
+  getTotalPDV(): number {
+    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosPDV, 0);
+  }
+
+  getTotalBruto(): number {
+    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosBruto, 0);
+  }
 }

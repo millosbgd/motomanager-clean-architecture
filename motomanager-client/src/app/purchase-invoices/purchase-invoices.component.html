@@ -40,6 +40,15 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr class="totals-row">
+          <td colspan="4"><strong>UKUPNO:</strong></td>
+          <td><strong>{{ getTotalNeto() | number:'1.2-2' }} RSD</strong></td>
+          <td><strong>{{ getTotalPDV() | number:'1.2-2' }} RSD</strong></td>
+          <td><strong>{{ getTotalBruto() | number:'1.2-2' }} RSD</strong></td>
+          <td></td>
+        </tr>
+      </tfoot>
     </table>
     <p *ngIf="invoices.length === 0 && !loading" class="no-data">Nema računa dobavljača u bazi.</p>
   </section>
