@@ -215,7 +215,8 @@ export class PurchaseInvoicesComponent implements OnInit {
     return new Date(date).toLocaleDateString('sr-RS');
   }
 
-  getTotalNeto()filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosNeto, 0);
+  getTotalNeto(): number {
+    return this.filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosNeto, 0);
   }
 
   getTotalPDV(): number {
@@ -269,7 +270,6 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.filterDateTo = '';
     this.filterDobavljacId = null;
     this.filterVoziloId = null;
-    this.filteredInvoices = this.invoices
-    return this.invoices.reduce((sum, invoice) => sum + invoice.iznosBruto, 0);
+    this.filteredInvoices = this.invoices;
   }
 }
