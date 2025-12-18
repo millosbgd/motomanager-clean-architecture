@@ -67,6 +67,7 @@ h1 {
 
 .list-header {
   display: flex;
+  gap: 10px;
   justify-content: flex-end;
   margin-bottom: 20px;
 }
@@ -165,6 +166,15 @@ tfoot td {
 
 .btn-delete:hover {
   background-color: #c0392b;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
 }
 
 .btn-cancel {

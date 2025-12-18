@@ -7,11 +7,12 @@ import { VehicleService } from '../services/vehicle.service';
 import { PurchaseInvoice, CreatePurchaseInvoiceRequest, UpdatePurchaseInvoiceRequest } from '../models/purchase-invoice.model';
 import { Client } from '../models/client.model';
 import { Vehicle } from '../models/vehicle.model';
+import { ExportDialogComponent, ExportFilters } from '../export-dialog/export-dialog.component';
 
 @Component({
   selector: 'app-purchase-invoices',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ExportDialogComponent],
   templateUrl: './purchase-invoices.component.html',
   styleUrl: './purchase-invoices.component.css'
 })
@@ -30,6 +31,7 @@ export class PurchaseInvoicesComponent implements OnInit {
   filterVoziloId: number | null = null;
   
   showAddForm = false;
+  showExportDialog = false;
   editingInvoice: PurchaseInvoice | null = null;
   
   newInvoice: CreatePurchaseInvoiceRequest = {
@@ -243,5 +245,38 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.filterDobavljacId = null;
     this.filterVoziloId = null;
     this.loadInvoices();
+  }
+
+  openExportDialog(): void {
+    this.showExportDialog = true;
+  }
+
+  closeExportDialog(): void {
+    this.showExportDialog = false;
+  }
+
+  onExport(filters: ExportFilters): void {
+    this.purchaseInvoiceService.exportToExcel(
+      filters.datumOd,
+      filters.datumDo,
+      filters.dobavljacId,
+      filters.voziloId
+    ).subscribe({
+      next: (blob) => {
+        // Kreiranje linka za download
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Racuni_dobavljaca_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        
+        this.showExportDialog = false;
+      },
+      error: (err) => {
+        this.error = 'Greška prilikom exporta u Excel';
+        console.error('Error exporting to Excel:', err);
+      }
+    });
   }
 }

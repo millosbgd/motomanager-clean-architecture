@@ -64,4 +64,17 @@ public class PurchaseInvoicesController : ControllerBase
             return NotFound();
         return NoContent();
     }
+
+    [HttpGet("export")]
+    public async Task<IActionResult> ExportToExcel(
+        [FromQuery] DateTime? datumOd = null,
+        [FromQuery] DateTime? datumDo = null,
+        [FromQuery] int? dobavljacId = null,
+        [FromQuery] int? voziloId = null)
+    {
+        var excelData = await _purchaseInvoiceService.ExportToExcelAsync(datumOd, datumDo, dobavljacId, voziloId);
+        
+        var fileName = $"Racuni_dobavljaca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+        return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+    }
 }

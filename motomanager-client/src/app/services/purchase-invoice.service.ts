@@ -51,4 +51,31 @@ export class PurchaseInvoiceService {
   deletePurchaseInvoice(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  exportToExcel(
+    datumOd?: string, 
+    datumDo?: string, 
+    dobavljacId?: number | null, 
+    voziloId?: number | null
+  ): Observable<Blob> {
+    let params: any = {};
+    
+    if (datumOd) {
+      params.datumOd = datumOd;
+    }
+    if (datumDo) {
+      params.datumDo = datumDo;
+    }
+    if (dobavljacId && dobavljacId > 0) {
+      params.dobavljacId = dobavljacId.toString();
+    }
+    if (voziloId && voziloId > 0) {
+      params.voziloId = voziloId.toString();
+    }
+    
+    return this.http.get(`${this.apiUrl}/export`, { 
+      params, 
+      responseType: 'blob' 
+    });
+  }
 }

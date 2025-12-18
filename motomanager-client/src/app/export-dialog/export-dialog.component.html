@@ -1,0 +1,71 @@
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Export u Excel</h2>
+      <button class="close-btn" (click)="onCancel()">&times;</button>
+    </div>
+    
+    <form (ngSubmit)="onExport()">
+      <div class="form-group">
+        <label for="exportDateFrom">Datum od:</label>
+        <input 
+          type="date" 
+          id="exportDateFrom" 
+          name="datumOd" 
+          [(ngModel)]="filters.datumOd" 
+        />
+        <small class="help-text">Opciono</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="exportDateTo">Datum do:</label>
+        <input 
+          type="date" 
+          id="exportDateTo" 
+          name="datumDo" 
+          [(ngModel)]="filters.datumDo" 
+        />
+        <small class="help-text">Opciono</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="exportDobavljac">Dobavljač:</label>
+        <select 
+          id="exportDobavljac" 
+          name="dobavljacId" 
+          [(ngModel)]="filters.dobavljacId"
+        >
+          <option [ngValue]="null">-- Svi dobavljači --</option>
+          <option *ngFor="let client of clients" [ngValue]="client.id">
+            {{ client.naziv }}
+          </option>
+        </select>
+        <small class="help-text">Opciono</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="exportVozilo">Vozilo:</label>
+        <select 
+          id="exportVozilo" 
+          name="voziloId" 
+          [(ngModel)]="filters.voziloId"
+        >
+          <option [ngValue]="null">-- Sva vozila --</option>
+          <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+            {{ vehicle.model }} ({{ vehicle.plate }})
+          </option>
+        </select>
+        <small class="help-text">Opciono</small>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Otkaži
+        </button>
+        <button type="submit" class="btn btn-primary">
+          📥 Export u Excel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

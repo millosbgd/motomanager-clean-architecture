@@ -1,5 +1,6 @@
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
+using ClosedXML.Excel;
 
 namespace MotoManager.Application.PurchaseInvoices;
 
@@ -112,5 +113,83 @@ public class PurchaseInvoiceService
     public async Task<bool> DeletePurchaseInvoiceAsync(int id)
     {
         return await _purchaseInvoiceRepository.DeleteAsync(id);
+    }
+
+    public async Task<byte[]> ExportToExcelAsync(
+        DateTime? datumOd = null, 
+        DateTime? datumDo = null, 
+        int? dobavljacId = null, 
+        int? voziloId = null)
+    {
+        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId);
+
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Računi dobavljača");
+
+        // Zaglavlje
+        worksheet.Cell(1, 1).Value = "Broj računa";
+        worksheet.Cell(1, 2).Value = "Datum";
+        worksheet.Cell(1, 3).Value = "Dobavljač";
+        worksheet.Cell(1, 4).Value = "Vozilo";
+        worksheet.Cell(1, 5).Value = "Iznos neto (RSD)";
+        worksheet.Cell(1, 6).Value = "PDV (RSD)";
+        worksheet.Cell(1, 7).Value = "Bruto iznos (RSD)";
+
+        // Formatiranje zaglavlja
+        var headerRange = worksheet.Range("A1:G1");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+        headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+        // Podaci
+        int row = 2;
+        foreach (var invoice in invoices)
+        {
+            worksheet.Cell(row, 1).Value = invoice.BrojRacuna;
+            worksheet.Cell(row, 2).Value = invoice.Datum.ToString("dd.MM.yyyy");
+            worksheet.Cell(row, 3).Value = invoice.Dobavljac.Naziv;
+            worksheet.Cell(row, 4).Value = invoice.Vozilo != null 
+                ? $"{invoice.Vozilo.Model} ({invoice.Vozilo.Plate})" 
+                : "-";
+            worksheet.Cell(row, 5).Value = invoice.IznosNeto;
+            worksheet.Cell(row, 6).Value = invoice.IznosPDV;
+            worksheet.Cell(row, 7).Value = invoice.IznosBruto;
+
+            // Formatiranje brojeva
+            worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
+            worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
+            worksheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
+            worksheet.Cell(row, 7).Style.Font.Bold = true;
+
+            row++;
+        }
+
+        // Ukupni zbir
+        if (invoices.Any())
+        {
+            worksheet.Cell(row, 4).Value = "UKUPNO:";
+            worksheet.Cell(row, 4).Style.Font.Bold = true;
+            worksheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            
+            worksheet.Cell(row, 5).FormulaA1 = $"=SUM(E2:E{row - 1})";
+            worksheet.Cell(row, 6).FormulaA1 = $"=SUM(F2:F{row - 1})";
+            worksheet.Cell(row, 7).FormulaA1 = $"=SUM(G2:G{row - 1})";
+
+            worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
+            worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
+            worksheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
+            
+            var totalRange = worksheet.Range($"D{row}:G{row}");
+            totalRange.Style.Font.Bold = true;
+            totalRange.Style.Fill.BackgroundColor = XLColor.LightYellow;
+            totalRange.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+        }
+
+        // Podešavanje širine kolona
+        worksheet.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
     }
 }

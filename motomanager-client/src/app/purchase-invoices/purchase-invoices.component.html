@@ -35,6 +35,9 @@
       <button class="btn btn-primary" (click)="showAddInvoiceForm()">
         + Dodaj novi račun dobavljača
       </button>
+      <button class="btn btn-success" (click)="openExportDialog()">
+        📥 Export u Excel
+      </button>
     </div>
   </header>
 
@@ -208,4 +211,13 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal za export u Excel -->
+  <app-export-dialog 
+    *ngIf="showExportDialog"
+    [clients]="clients"
+    [vehicles]="vehicles"
+    (export)="onExport($event)"
+    (cancel)="closeExportDialog()">
+  </app-export-dialog>
 </div>
