@@ -34,48 +34,40 @@ public class PurchaseInvoicesController : ControllerBase
         [FromQuery] string? dobavljacId = null,
         [FromQuery] string? voziloId = null)
     {
-        try
+        DateTime? parsedDatumOd = null;
+        DateTime? parsedDatumDo = null;
+        int? parsedDobavljacId = null;
+        int? parsedVoziloId = null;
+        var format = "yyyy-MM-dd";
+        var culture = System.Globalization.CultureInfo.InvariantCulture;
+
+        if (!string.IsNullOrWhiteSpace(datumOd))
         {
-            DateTime? parsedDatumOd = null;
-            DateTime? parsedDatumDo = null;
-            int? parsedDobavljacId = null;
-            int? parsedVoziloId = null;
-            var format = "yyyy-MM-dd";
-            var culture = System.Globalization.CultureInfo.InvariantCulture;
-
-            if (!string.IsNullOrWhiteSpace(datumOd))
-            {
-                if (DateTime.TryParseExact(datumOd, format, culture, System.Globalization.DateTimeStyles.None, out var tempOd))
-                    parsedDatumOd = tempOd;
-            }
-
-            if (!string.IsNullOrWhiteSpace(datumDo))
-            {
-                if (DateTime.TryParseExact(datumDo, format, culture, System.Globalization.DateTimeStyles.None, out var tempDo))
-                    parsedDatumDo = tempDo;
-            }
-
-            if (!string.IsNullOrWhiteSpace(dobavljacId))
-            {
-                if (int.TryParse(dobavljacId, out var tempDobavljacId))
-                    parsedDobavljacId = tempDobavljacId;
-            }
-
-            if (!string.IsNullOrWhiteSpace(voziloId))
-            {
-                if (int.TryParse(voziloId, out var tempVoziloId))
-                    parsedVoziloId = tempVoziloId;
-            }
-
-            var excelData = await _purchaseInvoiceService.ExportToExcelAsync(parsedDatumOd, parsedDatumDo, parsedDobavljacId, parsedVoziloId);
-            var fileName = $"Racuni_dobavljaca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            if (DateTime.TryParseExact(datumOd, format, culture, System.Globalization.DateTimeStyles.None, out var tempOd))
+                parsedDatumOd = tempOd;
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrWhiteSpace(datumDo))
         {
-            // DEBUG: Vraćam detaljnu poruku
-            return BadRequest($"Export error: {ex.Message}\n{ex.StackTrace}");
+            if (DateTime.TryParseExact(datumDo, format, culture, System.Globalization.DateTimeStyles.None, out var tempDo))
+                parsedDatumDo = tempDo;
         }
+
+        if (!string.IsNullOrWhiteSpace(dobavljacId))
+        {
+            if (int.TryParse(dobavljacId, out var tempDobavljacId))
+                parsedDobavljacId = tempDobavljacId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(voziloId))
+        {
+            if (int.TryParse(voziloId, out var tempVoziloId))
+                parsedVoziloId = tempVoziloId;
+        }
+
+        var excelData = await _purchaseInvoiceService.ExportToExcelAsync(parsedDatumOd, parsedDatumDo, parsedDobavljacId, parsedVoziloId);
+        var fileName = $"Racuni_dobavljaca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+        return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
 
     [HttpGet("{id}")]
