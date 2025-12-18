@@ -67,12 +67,27 @@ public class PurchaseInvoicesController : ControllerBase
 
     [HttpGet("export")]
     public async Task<IActionResult> ExportToExcel(
-        [FromQuery] DateTime? datumOd = null,
-        [FromQuery] DateTime? datumDo = null,
+        [FromQuery] string? datumOd = null,
+        [FromQuery] string? datumDo = null,
         [FromQuery] int? dobavljacId = null,
         [FromQuery] int? voziloId = null)
     {
-        var excelData = await _purchaseInvoiceService.ExportToExcelAsync(datumOd, datumDo, dobavljacId, voziloId);
+        DateTime? parsedDatumOd = null;
+        DateTime? parsedDatumDo = null;
+
+        if (!string.IsNullOrEmpty(datumOd))
+        {
+            if (DateTime.TryParse(datumOd, out var tempOd))
+                parsedDatumOd = tempOd;
+        }
+
+        if (!string.IsNullOrEmpty(datumDo))
+        {
+            if (DateTime.TryParse(datumDo, out var tempDo))
+                parsedDatumDo = tempDo;
+        }
+
+        var excelData = await _purchaseInvoiceService.ExportToExcelAsync(parsedDatumOd, parsedDatumDo, dobavljacId, voziloId);
         
         var fileName = $"Racuni_dobavljaca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
         return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
