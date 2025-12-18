@@ -273,9 +273,20 @@ export class PurchaseInvoicesComponent implements OnInit {
         
         this.showExportDialog = false;
       },
-      error: (err) => {
-        this.error = 'Greška prilikom exporta u Excel';
+      error: async (err) => {
         console.error('Error exporting to Excel:', err);
+        
+        // Pokušaj da pročitaš response body za detaljnu poruku
+        if (err.error instanceof Blob) {
+          const text = await err.error.text();
+          console.error('Backend error response:', text);
+          this.error = `Greška prilikom exporta: ${text}`;
+        } else if (err.error && typeof err.error === 'string') {
+          console.error('Backend error response:', err.error);
+          this.error = `Greška prilikom exporta: ${err.error}`;
+        } else {
+          this.error = 'Greška prilikom exporta u Excel';
+        }
       }
     });
   }
