@@ -74,21 +74,22 @@ public class PurchaseInvoicesController : ControllerBase
     {
         DateTime? parsedDatumOd = null;
         DateTime? parsedDatumDo = null;
+        var format = "yyyy-MM-dd";
+        var culture = System.Globalization.CultureInfo.InvariantCulture;
 
         if (!string.IsNullOrEmpty(datumOd))
         {
-            if (DateTime.TryParse(datumOd, out var tempOd))
+            if (DateTime.TryParseExact(datumOd, format, culture, System.Globalization.DateTimeStyles.None, out var tempOd))
                 parsedDatumOd = tempOd;
         }
 
         if (!string.IsNullOrEmpty(datumDo))
         {
-            if (DateTime.TryParse(datumDo, out var tempDo))
+            if (DateTime.TryParseExact(datumDo, format, culture, System.Globalization.DateTimeStyles.None, out var tempDo))
                 parsedDatumDo = tempDo;
         }
 
         var excelData = await _purchaseInvoiceService.ExportToExcelAsync(parsedDatumOd, parsedDatumDo, dobavljacId, voziloId);
-        
         var fileName = $"Racuni_dobavljaca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
         return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
