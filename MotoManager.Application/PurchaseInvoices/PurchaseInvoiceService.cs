@@ -20,7 +20,8 @@ public class PurchaseInvoiceService
         int? voziloId = null)
     {
         // Filtering happens in Repository (SQL WHERE clause)
-        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId);
+        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId) 
+            ?? Enumerable.Empty<PurchaseInvoice>();
         
         return invoices.Select(i => new PurchaseInvoiceDto(
             i.Id, 
@@ -147,7 +148,8 @@ public class PurchaseInvoiceService
         {
             worksheet.Cell(row, 1).Value = invoice.BrojRacuna;
             worksheet.Cell(row, 2).Value = invoice.Datum.ToString("dd.MM.yyyy");
-            worksheet.Cell(row, 3).Value = invoice.Dobavljac.Naziv;
+            var dobavljacNaziv = invoice.Dobavljac?.Naziv ?? "-";
+            worksheet.Cell(row, 3).Value = dobavljacNaziv;
             worksheet.Cell(row, 4).Value = invoice.Vozilo != null 
                 ? $"{invoice.Vozilo.Model} ({invoice.Vozilo.Plate})" 
                 : "-";
