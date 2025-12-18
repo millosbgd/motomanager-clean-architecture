@@ -85,3 +85,11 @@ C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-archite
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\MotoManager.Api.runtimeconfig.json
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\package-lock.json
 C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\publish\package.json
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\ClosedXML.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\ClosedXML.Parser.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\ExcelNumberFormat.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\RBush.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\SixLabors.Fonts.dll
+C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\MotoManager.Api\bin\Release\net8.0\System.IO.Packaging.dll
