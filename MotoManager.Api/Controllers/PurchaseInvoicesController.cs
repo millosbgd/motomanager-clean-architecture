@@ -27,8 +27,7 @@ public class PurchaseInvoicesController : ControllerBase
         return Ok(invoices);
     }
 
-    [HttpGet]
-    [Route("~/api/purchaseinvoices/export")]
+    [HttpGet("export-excel")]
     public async Task<IActionResult> ExportToExcel(
         [FromQuery] string? datumOd = null,
         [FromQuery] string? datumDo = null,

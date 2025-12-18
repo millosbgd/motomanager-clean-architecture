@@ -73,7 +73,7 @@ export class PurchaseInvoiceService {
       params.voziloId = voziloId.toString();
     }
     
-    return this.http.get(`${this.apiUrl}/export`, { 
+    return this.http.get(`${this.apiUrl}/export-excel`, { 
       params, 
       responseType: 'blob' 
     });
