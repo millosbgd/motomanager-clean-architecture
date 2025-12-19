@@ -82,6 +82,15 @@ public class PurchaseInvoicesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PurchaseInvoiceDto>> Create([FromBody] CreatePurchaseInvoiceRequest request)
     {
+        // Automatski postavi KorisnikId iz JWT tokena
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                     ?? User.FindFirst("sub")?.Value;
+        
+        if (!string.IsNullOrEmpty(userId))
+        {
+            request = request with { KorisnikId = userId };
+        }
+        
         var invoice = await _purchaseInvoiceService.CreatePurchaseInvoiceAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = invoice.Id }, invoice);
     }
@@ -91,6 +100,15 @@ public class PurchaseInvoicesController : ControllerBase
     {
         if (id != request.Id)
             return BadRequest();
+
+        // Automatski postavi KorisnikId iz JWT tokena
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                     ?? User.FindFirst("sub")?.Value;
+        
+        if (!string.IsNullOrEmpty(userId))
+        {
+            request = request with { KorisnikId = userId };
+        }
 
         var invoice = await _purchaseInvoiceService.UpdatePurchaseInvoiceAsync(request);
         if (invoice == null)

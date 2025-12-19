@@ -35,6 +35,15 @@ public class ServiceOrdersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ServiceOrderDto>> Create([FromBody] CreateServiceOrderRequest request)
     {
+        // Automatski postavi KorisnikId iz JWT tokena
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                     ?? User.FindFirst("sub")?.Value;
+        
+        if (!string.IsNullOrEmpty(userId))
+        {
+            request = request with { KorisnikId = userId };
+        }
+        
         var order = await _serviceOrderService.CreateServiceOrderAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
     }
@@ -44,6 +53,15 @@ public class ServiceOrdersController : ControllerBase
     {
         if (id != request.Id)
             return BadRequest();
+
+        // Automatski postavi KorisnikId iz JWT tokena
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                     ?? User.FindFirst("sub")?.Value;
+        
+        if (!string.IsNullOrEmpty(userId))
+        {
+            request = request with { KorisnikId = userId };
+        }
 
         var order = await _serviceOrderService.UpdateServiceOrderAsync(request);
         if (order == null)
