@@ -175,6 +175,10 @@ tfoot td {
   background-color: #f5f5f5;
 }
 
+.btn-menu.hidden {
+  visibility: hidden;
+}
+
 .dropdown-content {
   position: absolute;
   right: -10px;
