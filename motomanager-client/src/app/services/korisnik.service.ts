@@ -25,7 +25,7 @@ export class KorisnikService {
     return this.http.get<{ exists: boolean }>(`${this.apiUrl}/exists/${userId}`);
   }
 
-  setRegistered(value: boolean) {
+  setRegistered(value: boolean | null) {
     this.isRegisteredSubject.next(value);
   }
 
