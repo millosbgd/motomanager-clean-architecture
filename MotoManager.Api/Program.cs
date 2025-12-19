@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using MotoManager.Application.Abstractions;
 using MotoManager.Application.Vehicles;
@@ -13,7 +14,7 @@ using MotoManager.Application.Sektori;
 using MotoManager.Application.Korisnici;
 using MotoManager.Infrastructure.Data;
 using MotoManager.Infrastructure.Repositories;
-using MotoManager.Api.Middleware;
+using MotoManager.Api.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Authorization Policy
+builder.Services.AddSingleton<IAuthorizationHandler, RegisteredUserHandler>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireRegisteredUser", policy =>
+        policy.Requirements.Add(new RegisteredUserRequirement()));
+    
+    // Podrazumevana policy za sve [Authorize] atribute
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddRequirements(new RegisteredUserRequirement())
+        .Build();
+});
+
 // CORS za lokalni Angular i Azure Static Web App
 const string AllowLocalAngular = "AllowLocalAngular";
 builder.Services.AddCors(options =>
@@ -102,9 +117,6 @@ app.UseCors(AllowLocalAngular);
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Middleware za proveru da li je korisnik registrovan u bazi
-app.UseMiddleware<KorisnikAuthorizationMiddleware>();
 
 app.MapControllers();
 
