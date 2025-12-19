@@ -137,6 +137,14 @@ th {
   text-transform: capitalize;
 }
 
+tbody tr {
+  transition: none;
+}
+
+tbody tr:hover {
+  background-color: transparent;
+}
+
 tfoot {
   background-color: #ecf0f1;
 }
