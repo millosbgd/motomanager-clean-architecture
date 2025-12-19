@@ -30,6 +30,7 @@ export class PurchaseInvoicesComponent implements OnInit {
   error: string | null = null;
   
   // Filters
+  showFilters = false;
   filterDateFrom: string = '';
   filterDateTo: string = '';
   filterDobavljacId: number | null = null;
@@ -274,6 +275,10 @@ export class PurchaseInvoicesComponent implements OnInit {
 
   getTotalBruto(): number {
     return this.filteredInvoices.reduce((sum, invoice) => sum + invoice.iznosBruto, 0);
+  }
+
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
   }
 
   applyFilters(): void {

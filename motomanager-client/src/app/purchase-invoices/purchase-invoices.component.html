@@ -1,9 +1,7 @@
 <div class="container">
   <header>
-    <h1>Računi dobavljača</h1>
-    
     <!-- Filters Section -->
-    <div class="filters-section">
+    <div *ngIf="showFilters" class="filters-section">
       <div class="filter-group">
         <label for="filterDateFrom">Datum od:</label>
         <input type="date" id="filterDateFrom" [(ngModel)]="filterDateFrom" (ngModelChange)="applyFilters()" />
@@ -32,6 +30,9 @@
     </div>
     
     <div class="list-header">
+      <button class="btn btn-filter" (click)="toggleFilters()">
+        {{ showFilters ? '🔼 Sakrij filtere' : '🔽 Prikaži filtere' }}
+      </button>
       <button class="btn btn-primary" (click)="showAddInvoiceForm()">
         + Dodaj novi račun dobavljača
       </button>
