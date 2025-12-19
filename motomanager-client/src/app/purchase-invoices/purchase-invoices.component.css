@@ -184,16 +184,16 @@ tfoot td {
 }
 
 .btn-menu.hidden {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .dropdown-content {
   position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
+  right: -5px;
+  left: -5px;
+  top: -1px;
   background-color: #ffffff;
-  min-width: 100px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   z-index: 9999;
   border-radius: 4px;
