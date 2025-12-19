@@ -13,6 +13,7 @@ using MotoManager.Application.Sektori;
 using MotoManager.Application.Korisnici;
 using MotoManager.Infrastructure.Data;
 using MotoManager.Infrastructure.Repositories;
+using MotoManager.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,6 +102,9 @@ app.UseCors(AllowLocalAngular);
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Middleware za proveru da li je korisnik registrovan u bazi
+app.UseMiddleware<KorisnikAuthorizationMiddleware>();
 
 app.MapControllers();
 
