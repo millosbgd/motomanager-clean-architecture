@@ -63,7 +63,7 @@ header {
 .btn-filter {
   background-color: #34495e;
   color: white;
-  padding: 10px 20px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -78,6 +78,10 @@ header {
 .list-header {
   display: flex;
   gap: 10px;
+}
+
+.btn-filter {
+  order: -1;
   justify-content: flex-end;
   margin-bottom: 20px;
 }
@@ -105,6 +109,7 @@ table {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
+  font-size: 12px;
 }
 
 thead {
@@ -113,9 +118,15 @@ thead {
 }
 
 th, td {
-  padding: 12px 15px;
+  padding: 4px 8px;
   text-align: left;
   border-bottom: 1px solid #ecf0f1;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 tbody tr:hover {
@@ -124,7 +135,6 @@ tbody tr:hover {
 
 tfoot {
   background-color: #ecf0f1;
-  font-weight: bold;
 }
 
 tfoot tr.totals-row {
@@ -132,8 +142,8 @@ tfoot tr.totals-row {
 }
 
 tfoot td {
-  padding: 15px;
-  font-size: 16px;
+  padding: 6px 8px;
+  font-size: 12px;
   color: #2c3e50;
 }
 

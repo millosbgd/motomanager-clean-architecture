@@ -30,14 +30,14 @@
     </div>
     
     <div class="list-header">
-      <button class="btn btn-filter" (click)="toggleFilters()">
-        {{ showFilters ? '🔼 Sakrij filtere' : '🔽 Prikaži filtere' }}
+      <button class="btn btn-filter" (click)="toggleFilters()" title="{{ showFilters ? 'Sakrij filtere' : 'Prikaži filtere' }}">
+        {{ showFilters ? '▲' : '▼' }}
       </button>
       <button class="btn btn-primary" (click)="showAddInvoiceForm()">
         + Dodaj novi račun dobavljača
       </button>
-      <button class="btn btn-success" (click)="openExportDialog()">
-        📥 Export u Excel
+      <button class="btn btn-success" (click)="openExportDialog()" title="Export u Excel">
+        📄
       </button>
     </div>
   </header>
@@ -69,7 +69,7 @@
           <td>{{ invoice.sektorNaziv || '-' }}</td>
           <td>{{ invoice.iznosNeto | number:'1.2-2' }} RSD</td>
           <td>{{ invoice.iznosPDV | number:'1.2-2' }} RSD</td>
-          <td><strong>{{ invoice.iznosBruto | number:'1.2-2' }} RSD</strong></td>
+          <td>{{ invoice.iznosBruto | number:'1.2-2' }} RSD</td>
           <td class="actions">
             <button class="btn btn-edit" (click)="editInvoice(invoice)">Izmeni</button>
             <button class="btn btn-delete" (click)="deleteInvoice(invoice.id)">Obriši</button>
@@ -78,10 +78,10 @@
       </tbody>
       <tfoot>
         <tr class="totals-row">
-          <td colspan="5"><strong>UKUPNO:</strong></td>
-          <td><strong>{{ getTotalNeto() | number:'1.2-2' }} RSD</strong></td>
-          <td><strong>{{ getTotalPDV() | number:'1.2-2' }} RSD</strong></td>
-          <td><strong>{{ getTotalBruto() | number:'1.2-2' }} RSD</strong></td>
+          <td colspan="5">UKUPNO:</td>
+          <td>{{ getTotalNeto() | number:'1.2-2' }} RSD</td>
+          <td>{{ getTotalPDV() | number:'1.2-2' }} RSD</td>
+          <td>{{ getTotalBruto() | number:'1.2-2' }} RSD</td>
           <td></td>
         </tr>
       </tfoot>
