@@ -22,6 +22,7 @@ public class ServiceOrderRepository : IServiceOrderRepository
         return await _context.ServiceOrders
             .Include(so => so.Client)
             .Include(so => so.Vehicle)
+            .Include(so => so.Korisnik)
             .ToListAsync();
     }
 
@@ -30,6 +31,7 @@ public class ServiceOrderRepository : IServiceOrderRepository
         return await _context.ServiceOrders
             .Include(so => so.Client)
             .Include(so => so.Vehicle)
+            .Include(so => so.Korisnik)
             .FirstOrDefaultAsync(so => so.Id == id);
     }
 
@@ -53,6 +55,7 @@ public class ServiceOrderRepository : IServiceOrderRepository
         existing.VehicleId = serviceOrder.VehicleId;
         existing.OpisRada = serviceOrder.OpisRada;
         existing.Kilometraza = serviceOrder.Kilometraza;
+        existing.KorisnikId = serviceOrder.KorisnikId;
 
         await _context.SaveChangesAsync();
         

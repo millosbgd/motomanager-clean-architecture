@@ -9,6 +9,8 @@ using MotoManager.Application.ServiceOrderLabors;
 using MotoManager.Application.ServiceOrderMaterials;
 using MotoManager.Application.Materials;
 using MotoManager.Application.PurchaseInvoices;
+using MotoManager.Application.Sektori;
+using MotoManager.Application.Korisnici;
 using MotoManager.Infrastructure.Data;
 using MotoManager.Infrastructure.Repositories;
 
@@ -37,6 +39,12 @@ builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<MaterialService>();
 builder.Services.AddScoped<IPurchaseInvoiceRepository, PurchaseInvoiceRepository>();
 builder.Services.AddScoped<PurchaseInvoiceService>();
+builder.Services.AddScoped<ISektorRepository>(provider => 
+    new SektorRepository(builder.Configuration.GetConnectionString("DefaultConnection")!));
+builder.Services.AddScoped<SektorService>();
+builder.Services.AddScoped<IKorisnikRepository>(provider => 
+    new KorisnikRepository(builder.Configuration.GetConnectionString("DefaultConnection")!));
+builder.Services.AddScoped<KorisnikService>();
 
 // Auth0 JWT Authentication
 var domain = builder.Configuration["Auth0:Domain"];

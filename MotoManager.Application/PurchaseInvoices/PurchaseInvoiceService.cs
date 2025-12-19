@@ -34,7 +34,9 @@ public class PurchaseInvoiceService
             i.Vozilo?.Plate,
             i.IznosNeto, 
             i.IznosPDV, 
-            i.IznosBruto));
+            i.IznosBruto,
+            i.KorisnikId,
+            i.Korisnik?.ImePrezime));
     }
 
     public async Task<PurchaseInvoiceDto?> GetPurchaseInvoiceByIdAsync(int id)
@@ -51,7 +53,9 @@ public class PurchaseInvoiceService
             invoice.Vozilo?.Plate,
             invoice.IznosNeto, 
             invoice.IznosPDV, 
-            invoice.IznosBruto);
+            invoice.IznosBruto,
+            invoice.KorisnikId,
+            invoice.Korisnik?.ImePrezime);
     }
 
     public async Task<PurchaseInvoiceDto> CreatePurchaseInvoiceAsync(CreatePurchaseInvoiceRequest request)
@@ -64,7 +68,8 @@ public class PurchaseInvoiceService
             VoziloId = request.VoziloId,
             IznosNeto = request.IznosNeto,
             IznosPDV = request.IznosPDV,
-            IznosBruto = request.IznosBruto
+            IznosBruto = request.IznosBruto,
+            KorisnikId = request.KorisnikId
         };
 
         var created = await _purchaseInvoiceRepository.CreateAsync(invoice);
@@ -79,7 +84,9 @@ public class PurchaseInvoiceService
             created.Vozilo?.Plate,
             created.IznosNeto, 
             created.IznosPDV, 
-            created.IznosBruto);
+            created.IznosBruto,
+            created.KorisnikId,
+            created.Korisnik?.ImePrezime);
     }
 
     public async Task<PurchaseInvoiceDto?> UpdatePurchaseInvoiceAsync(UpdatePurchaseInvoiceRequest request)
@@ -93,7 +100,8 @@ public class PurchaseInvoiceService
             VoziloId = request.VoziloId,
             IznosNeto = request.IznosNeto,
             IznosPDV = request.IznosPDV,
-            IznosBruto = request.IznosBruto
+            IznosBruto = request.IznosBruto,
+            KorisnikId = request.KorisnikId
         };
 
         var updated = await _purchaseInvoiceRepository.UpdateAsync(invoice);
@@ -108,7 +116,9 @@ public class PurchaseInvoiceService
             updated.Vozilo?.Plate,
             updated.IznosNeto, 
             updated.IznosPDV, 
-            updated.IznosBruto);
+            updated.IznosBruto,
+            updated.KorisnikId,
+            updated.Korisnik?.ImePrezime);
     }
 
     public async Task<bool> DeletePurchaseInvoiceAsync(int id)

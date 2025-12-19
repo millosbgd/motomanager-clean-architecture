@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
     public DbSet<ServiceOrderMaterial> ServiceOrderMaterials => Set<ServiceOrderMaterial>();
     public DbSet<Material> Materials => Set<Material>();
     public DbSet<PurchaseInvoice> PurchaseInvoices => Set<PurchaseInvoice>();
+    public DbSet<Sektor> Sektori => Set<Sektor>();
+    public DbSet<Korisnik> Korisnici => Set<Korisnik>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,6 +62,7 @@ public class AppDbContext : DbContext
             entity.Property(c => c.Email)
                   .HasMaxLength(100)
                   .IsRequired();
+        });
 
         modelBuilder.Entity<ServiceOrder>(entity =>
         {
@@ -85,6 +88,11 @@ public class AppDbContext : DbContext
             entity.HasOne(so => so.Vehicle)
                   .WithMany()
                   .HasForeignKey(so => so.VehicleId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(so => so.Korisnik)
+                  .WithMany()
+                  .HasForeignKey(so => so.KorisnikId)
                   .OnDelete(DeleteBehavior.Restrict);
 
             // Collections
@@ -177,7 +185,46 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(i => i.VoziloId)
                   .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(i => i.Korisnik)
+                  .WithMany()
+                  .HasForeignKey(i => i.KorisnikId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<Sektor>(entity =>
+        {
+            entity.ToTable("Sektor");
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.Naziv)
+                  .HasMaxLength(100)
+                  .IsRequired();
+            entity.Property(s => s.CreatedAt)
+                  .IsRequired();
+        });
+
+        modelBuilder.Entity<Korisnik>(entity =>
+        {
+            entity.ToTable("Korisnik");
+            entity.HasKey(k => k.Id);
+            entity.Property(k => k.Id)
+                  .HasMaxLength(255)
+                  .IsRequired();
+            entity.Property(k => k.ImePrezime)
+                  .HasMaxLength(200)
+                  .IsRequired();
+            entity.Property(k => k.UserName)
+                  .HasMaxLength(100)
+                  .IsRequired();
+            entity.Property(k => k.SektorId)
+                  .IsRequired();
+            entity.Property(k => k.CreatedAt)
+                  .IsRequired();
+            
+            entity.HasOne(k => k.Sektor)
+                  .WithMany()
+                  .HasForeignKey(k => k.SektorId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

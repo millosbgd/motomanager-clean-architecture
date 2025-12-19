@@ -28,7 +28,9 @@ public class ServiceOrderService
             o.Vehicle?.Model ?? "",
             o.Vehicle?.Plate ?? "",
             o.OpisRada, 
-            o.Kilometraza));
+            o.Kilometraza,
+            o.KorisnikId,
+            o.Korisnik?.ImePrezime));
     }
 
     public async Task<ServiceOrderDto?> GetServiceOrderByIdAsync(int id)
@@ -46,7 +48,9 @@ public class ServiceOrderService
             order.Vehicle?.Model ?? "",
             order.Vehicle?.Plate ?? "",
             order.OpisRada, 
-            order.Kilometraza);
+            order.Kilometraza,
+            order.KorisnikId,
+            order.Korisnik?.ImePrezime);
     }
 
     public async Task<ServiceOrderDto> CreateServiceOrderAsync(CreateServiceOrderRequest request)
@@ -58,7 +62,8 @@ public class ServiceOrderService
             ClientId = request.ClientId,
             VehicleId = request.VehicleId,
             OpisRada = request.OpisRada,
-            Kilometraza = request.Kilometraza
+            Kilometraza = request.Kilometraza,
+            KorisnikId = request.KorisnikId
         };
 
         var created = await _serviceOrderRepository.CreateAsync(order);
@@ -72,7 +77,9 @@ public class ServiceOrderService
             created.Vehicle?.Model ?? "",
             created.Vehicle?.Plate ?? "",
             created.OpisRada, 
-            created.Kilometraza);
+            created.Kilometraza,
+            created.KorisnikId,
+            created.Korisnik?.ImePrezime);
     }
 
     public async Task<ServiceOrderDto?> UpdateServiceOrderAsync(UpdateServiceOrderRequest request)
@@ -85,7 +92,8 @@ public class ServiceOrderService
             ClientId = request.ClientId,
             VehicleId = request.VehicleId,
             OpisRada = request.OpisRada,
-            Kilometraza = request.Kilometraza
+            Kilometraza = request.Kilometraza,
+            KorisnikId = request.KorisnikId
         };
 
         var updated = await _serviceOrderRepository.UpdateAsync(order);
@@ -101,7 +109,9 @@ public class ServiceOrderService
             updated.Vehicle?.Model ?? "",
             updated.Vehicle?.Plate ?? "",
             updated.OpisRada, 
-            updated.Kilometraza);
+            updated.Kilometraza,
+            updated.KorisnikId,
+            updated.Korisnik?.ImePrezime);
     }
 
     public async Task<bool> DeleteServiceOrderAsync(int id)

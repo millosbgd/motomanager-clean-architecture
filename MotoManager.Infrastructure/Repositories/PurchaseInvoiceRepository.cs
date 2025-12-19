@@ -23,6 +23,7 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         var query = _context.PurchaseInvoices
             .Include(i => i.Dobavljac)
             .Include(i => i.Vozilo)
+            .Include(i => i.Korisnik)
             .AsQueryable();
         
         // SQL WHERE clause filtering
@@ -54,6 +55,7 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         return await _context.PurchaseInvoices
             .Include(i => i.Dobavljac)
             .Include(i => i.Vozilo)
+            .Include(i => i.Korisnik)
             .FirstOrDefaultAsync(i => i.Id == id);
     }
 
@@ -77,6 +79,7 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         existing.IznosNeto = purchaseInvoice.IznosNeto;
         existing.IznosPDV = purchaseInvoice.IznosPDV;
         existing.IznosBruto = purchaseInvoice.IznosBruto;
+        existing.KorisnikId = purchaseInvoice.KorisnikId;
 
         await _context.SaveChangesAsync();
         

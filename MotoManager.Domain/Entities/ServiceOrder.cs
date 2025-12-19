@@ -9,8 +9,10 @@ public class ServiceOrder
     public int VehicleId { get; set; }
     public string OpisRada { get; set; } = string.Empty;
     public int Kilometraza { get; set; }
+    public string? KorisnikId { get; set; }
 
     // Navigation properties
+    public Korisnik? Korisnik { get; set; }
     public Client Client { get; set; } = null!;
     public Vehicle Vehicle { get; set; } = null!;
     public System.Collections.Generic.ICollection<ServiceOrderLabor> Labors { get; set; } = new System.Collections.Generic.List<ServiceOrderLabor>();

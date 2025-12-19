@@ -12,4 +12,6 @@ public class PurchaseInvoice
     public decimal IznosNeto { get; set; }
     public decimal IznosPDV { get; set; }
     public decimal IznosBruto { get; set; }
+    public string? KorisnikId { get; set; }
+    public Korisnik? Korisnik { get; set; }
 }
