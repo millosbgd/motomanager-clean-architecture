@@ -10,6 +10,8 @@ export interface PurchaseInvoice {
   iznosNeto: number;
   iznosPDV: number;
   iznosBruto: number;
+  sektorId: number | null;
+  sektorNaziv: string | null;
 }
 
 export interface CreatePurchaseInvoiceRequest {
@@ -20,6 +22,7 @@ export interface CreatePurchaseInvoiceRequest {
   iznosNeto: number;
   iznosPDV: number;
   iznosBruto: number;
+  sektorId: number | null;
 }
 
 export interface UpdatePurchaseInvoiceRequest {
@@ -31,4 +34,5 @@ export interface UpdatePurchaseInvoiceRequest {
   iznosNeto: number;
   iznosPDV: number;
   iznosBruto: number;
+  sektorId: number | null;
 }

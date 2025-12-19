@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MotoManager.Application.PurchaseInvoices;
+using MotoManager.Application.Korisnici;
 
 namespace MotoManager.Api.Controllers;
 
@@ -10,10 +11,14 @@ namespace MotoManager.Api.Controllers;
 public class PurchaseInvoicesController : ControllerBase
 {
     private readonly PurchaseInvoiceService _purchaseInvoiceService;
+    private readonly KorisnikService _korisnikService;
 
-    public PurchaseInvoicesController(PurchaseInvoiceService purchaseInvoiceService)
+    public PurchaseInvoicesController(
+        PurchaseInvoiceService purchaseInvoiceService,
+        KorisnikService korisnikService)
     {
         _purchaseInvoiceService = purchaseInvoiceService;
+        _korisnikService = korisnikService;
     }
 
     [HttpGet]
@@ -89,6 +94,13 @@ public class PurchaseInvoicesController : ControllerBase
         if (!string.IsNullOrEmpty(userId))
         {
             request = request with { KorisnikId = userId };
+            
+            // Automatski postavi SektorId iz korisnikovog zapisa
+            var korisnik = await _korisnikService.GetKorisnikByIdAsync(userId);
+            if (korisnik != null && korisnik.SektorId.HasValue && !request.SektorId.HasValue)
+            {
+                request = request with { SektorId = korisnik.SektorId };
+            }
         }
         
         var invoice = await _purchaseInvoiceService.CreatePurchaseInvoiceAsync(request);

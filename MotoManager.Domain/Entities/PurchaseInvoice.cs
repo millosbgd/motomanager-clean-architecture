@@ -14,4 +14,6 @@ public class PurchaseInvoice
     public decimal IznosBruto { get; set; }
     public string? KorisnikId { get; set; }
     public Korisnik? Korisnik { get; set; }
+    public int? SektorId { get; set; }
+    public Sektor? Sektor { get; set; }
 }

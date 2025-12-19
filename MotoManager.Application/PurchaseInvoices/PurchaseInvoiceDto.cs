@@ -13,7 +13,9 @@ public record PurchaseInvoiceDto(
     decimal IznosPDV, 
     decimal IznosBruto,
     string? KorisnikId,
-    string? KorisnikImePrezime);
+    string? KorisnikImePrezime,
+    int? SektorId,
+    string? SektorNaziv);
 
 public record CreatePurchaseInvoiceRequest(
     string BrojRacuna, 
@@ -23,7 +25,8 @@ public record CreatePurchaseInvoiceRequest(
     decimal IznosNeto, 
     decimal IznosPDV, 
     decimal IznosBruto,
-    string? KorisnikId);
+    string? KorisnikId,
+    int? SektorId);
 
 public record UpdatePurchaseInvoiceRequest(
     int Id, 
@@ -34,4 +37,5 @@ public record UpdatePurchaseInvoiceRequest(
     decimal IznosNeto, 
     decimal IznosPDV, 
     decimal IznosBruto,
-    string? KorisnikId);
+    string? KorisnikId,
+    int? SektorId);

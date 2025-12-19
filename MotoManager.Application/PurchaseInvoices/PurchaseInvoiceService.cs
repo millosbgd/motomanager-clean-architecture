@@ -36,7 +36,9 @@ public class PurchaseInvoiceService
             i.IznosPDV, 
             i.IznosBruto,
             i.KorisnikId,
-            i.Korisnik?.ImePrezime));
+            i.Korisnik?.ImePrezime,
+            i.SektorId,
+            i.Sektor?.Naziv));
     }
 
     public async Task<PurchaseInvoiceDto?> GetPurchaseInvoiceByIdAsync(int id)
@@ -55,7 +57,9 @@ public class PurchaseInvoiceService
             invoice.IznosPDV, 
             invoice.IznosBruto,
             invoice.KorisnikId,
-            invoice.Korisnik?.ImePrezime);
+            invoice.Korisnik?.ImePrezime,
+            invoice.SektorId,
+            invoice.Sektor?.Naziv);
     }
 
     public async Task<PurchaseInvoiceDto> CreatePurchaseInvoiceAsync(CreatePurchaseInvoiceRequest request)
@@ -69,7 +73,8 @@ public class PurchaseInvoiceService
             IznosNeto = request.IznosNeto,
             IznosPDV = request.IznosPDV,
             IznosBruto = request.IznosBruto,
-            KorisnikId = request.KorisnikId
+            KorisnikId = request.KorisnikId,
+            SektorId = request.SektorId
         };
 
         var created = await _purchaseInvoiceRepository.CreateAsync(invoice);
@@ -86,7 +91,9 @@ public class PurchaseInvoiceService
             created.IznosPDV, 
             created.IznosBruto,
             created.KorisnikId,
-            created.Korisnik?.ImePrezime);
+            created.Korisnik?.ImePrezime,
+            created.SektorId,
+            created.Sektor?.Naziv);
     }
 
     public async Task<PurchaseInvoiceDto?> UpdatePurchaseInvoiceAsync(UpdatePurchaseInvoiceRequest request)
@@ -101,7 +108,8 @@ public class PurchaseInvoiceService
             IznosNeto = request.IznosNeto,
             IznosPDV = request.IznosPDV,
             IznosBruto = request.IznosBruto,
-            KorisnikId = request.KorisnikId
+            KorisnikId = request.KorisnikId,
+            SektorId = request.SektorId
         };
 
         var updated = await _purchaseInvoiceRepository.UpdateAsync(invoice);
@@ -118,7 +126,9 @@ public class PurchaseInvoiceService
             updated.IznosPDV, 
             updated.IznosBruto,
             updated.KorisnikId,
-            updated.Korisnik?.ImePrezime);
+            updated.Korisnik?.ImePrezime,
+            updated.SektorId,
+            updated.Sektor?.Naziv);
     }
 
     public async Task<bool> DeletePurchaseInvoiceAsync(int id)

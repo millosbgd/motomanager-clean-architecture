@@ -4,9 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { PurchaseInvoiceService } from '../services/purchase-invoice.service';
 import { ClientService } from '../services/client.service';
 import { VehicleService } from '../services/vehicle.service';
+import { SektorService } from '../services/sektor.service';
+import { KorisnikService } from '../services/korisnik.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { PurchaseInvoice, CreatePurchaseInvoiceRequest, UpdatePurchaseInvoiceRequest } from '../models/purchase-invoice.model';
 import { Client } from '../models/client.model';
 import { Vehicle } from '../models/vehicle.model';
+import { Sektor } from '../models/sektor.model';
 import { ExportDialogComponent, ExportFilters } from '../export-dialog/export-dialog.component';
 
 @Component({
@@ -21,6 +25,7 @@ export class PurchaseInvoicesComponent implements OnInit {
   filteredInvoices: PurchaseInvoice[] = [];
   clients: Client[] = [];
   vehicles: Vehicle[] = [];
+  sektori: Sektor[] = [];
   loading = false;
   error: string | null = null;
   
@@ -41,7 +46,8 @@ export class PurchaseInvoicesComponent implements OnInit {
     voziloId: null,
     iznosNeto: 0,
     iznosPDV: 0,
-    iznosBruto: 0
+    iznosBruto: 0,
+    sektorId: null
   };
   
   updatedInvoice: UpdatePurchaseInvoiceRequest = {
@@ -52,19 +58,24 @@ export class PurchaseInvoicesComponent implements OnInit {
     voziloId: null,
     iznosNeto: 0,
     iznosPDV: 0,
-    iznosBruto: 0
+    iznosBruto: 0,
+    sektorId: null
   };
 
   constructor(
     private purchaseInvoiceService: PurchaseInvoiceService,
     private clientService: ClientService,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private sektorService: SektorService,
+    private korisnikService: KorisnikService,
+    public auth: AuthService
   ) { }
 
   ngOnInit(): void {
     this.loadInvoices();
     this.loadClients();
     this.loadVehicles();
+    this.loadSektori();
   }
 
   loadInvoices(): void {
@@ -111,6 +122,17 @@ export class PurchaseInvoicesComponent implements OnInit {
     });
   }
 
+  loadSektori(): void {
+    this.sektorService.getAll().subscribe({
+      next: (data) => {
+        this.sektori = data;
+      },
+      error: (err) => {
+        console.error('Error loading sektori:', err);
+      }
+    });
+  }
+
   showAddInvoiceForm(): void {
     this.showAddForm = true;
     this.newInvoice = {
@@ -120,8 +142,25 @@ export class PurchaseInvoicesComponent implements OnInit {
       voziloId: null,
       iznosNeto: 0,
       iznosPDV: 0,
-      iznosBruto: 0
+      iznosBruto: 0,
+      sektorId: null
     };
+    
+    // Automatski postavi sektorId iz ulogovanog korisnika
+    this.auth.user$.subscribe(user => {
+      if (user?.sub) {
+        this.korisnikService.getById(user.sub).subscribe({
+          next: (korisnik) => {
+            if (korisnik.sektorId) {
+              this.newInvoice.sektorId = korisnik.sektorId;
+            }
+          },
+          error: (err) => {
+            console.error('Error loading user sektor:', err);
+          }
+        });
+      }
+    });
   }
 
   cancelAdd(): void {
@@ -153,7 +192,8 @@ export class PurchaseInvoicesComponent implements OnInit {
           voziloId: null,
           iznosNeto: 0,
           iznosPDV: 0,
-          iznosBruto: 0
+          iznosBruto: 0,
+          sektorId: null
         };
       },
       error: (err) => {
@@ -173,7 +213,8 @@ export class PurchaseInvoicesComponent implements OnInit {
       voziloId: invoice.voziloId,
       iznosNeto: invoice.iznosNeto,
       iznosPDV: invoice.iznosPDV,
-      iznosBruto: invoice.iznosBruto
+      iznosBruto: invoice.iznosBruto,
+      sektorId: invoice.sektorId
     };
   }
 
