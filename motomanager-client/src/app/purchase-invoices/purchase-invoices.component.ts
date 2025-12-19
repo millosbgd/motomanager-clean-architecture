@@ -78,6 +78,14 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.loadClients();
     this.loadVehicles();
     this.loadSektori();
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.dropdown')) {
+        this.openDropdownId = null;
+      }
+    });
   }
 
   loadInvoices(): void {
