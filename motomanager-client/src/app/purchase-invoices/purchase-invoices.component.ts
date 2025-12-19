@@ -210,6 +210,7 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.purchaseInvoiceService.deletePurchaseInvoice(id).subscribe({
       next: () => {
         this.invoices = this.invoices.filter(i => i.id !== id);
+        this.filteredInvoices = this.filteredInvoices.filter(i => i.id !== id);
       },
       error: (err) => {
         this.error = 'Greška prilikom brisanja računa dobavljača';
