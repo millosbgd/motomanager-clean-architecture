@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// CORS za lokalni Angular
+// CORS za lokalni Angular i Azure Static Web App
 const string AllowLocalAngular = "AllowLocalAngular";
 builder.Services.AddCors(options =>
 {
@@ -78,7 +78,6 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                 "http://localhost:4200",
-                "https://motomanager.azurewebsites.net",
                 "https://lively-dune-0073f1003.3.azurestaticapps.net"
             )
             .AllowAnyHeader()
