@@ -42,10 +42,11 @@ public class KorisniciController : ControllerBase
     }
 
     [HttpGet("exists/{id}")]
-    public async Task<ActionResult<bool>> Exists(string id)
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> Exists(string id)
     {
         var exists = await _korisnikService.KorisnikExistsAsync(id);
-        return Ok(exists);
+        return Ok(new { exists });
     }
 
     [HttpPost]

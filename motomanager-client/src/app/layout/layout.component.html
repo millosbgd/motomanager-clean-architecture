@@ -3,13 +3,15 @@
     <div class="navbar-brand">
       <h1>MotoManager</h1>
     </div>
-    <ul class="navbar-menu">
-      <li><a routerLink="/vehicles" routerLinkActive="active">Vozila</a></li>
-      <li><a routerLink="/clients" routerLinkActive="active">Klijenti</a></li>
-      <li><a routerLink="/service-orders" routerLinkActive="active">Servisni nalozi</a></li>
-      <li><a routerLink="/materials" routerLinkActive="active">Materijali</a></li>
-      <li><a routerLink="/purchase-invoices" routerLinkActive="active">Računi dobavljača</a></li>
-    </ul>
+    @if ((auth.isAuthenticated$ | async) && (korisnikService.isRegistered$ | async)) {
+      <ul class="navbar-menu">
+        <li><a routerLink="/vehicles" routerLinkActive="active">Vozila</a></li>
+        <li><a routerLink="/clients" routerLinkActive="active">Klijenti</a></li>
+        <li><a routerLink="/service-orders" routerLinkActive="active">Servisni nalozi</a></li>
+        <li><a routerLink="/materials" routerLinkActive="active">Materijali</a></li>
+        <li><a routerLink="/purchase-invoices" routerLinkActive="active">Računi dobavljača</a></li>
+      </ul>
+    }
     <div class="navbar-auth">
       @if (auth.isAuthenticated$ | async) {
         <span class="user-info">{{ (auth.user$ | async)?.name || (auth.user$ | async)?.email }}</span>
@@ -21,6 +23,14 @@
   </nav>
   
   <main class="main-content">
-    <router-outlet></router-outlet>
+    @if ((auth.isAuthenticated$ | async) && (korisnikService.isRegistered$ | async) === false) {
+      <div class="access-denied">
+        <h2>Pristup odbijen</h2>
+        <p>Vaš nalog nije registrovan u sistemu.</p>
+        <p>Kontaktirajte administratora da vam omogući pristup aplikaciji.</p>
+      </div>
+    } @else {
+      <router-outlet></router-outlet>
+    }
   </main>
 </div>
