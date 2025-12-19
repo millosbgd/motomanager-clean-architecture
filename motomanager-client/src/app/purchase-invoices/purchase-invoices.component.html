@@ -33,12 +33,14 @@
       <button class="btn btn-filter" (click)="toggleFilters()" title="{{ showFilters ? 'Sakrij filtere' : 'Prikaži filtere' }}">
         {{ showFilters ? '▲' : '▼' }}
       </button>
-      <button class="btn btn-primary" (click)="showAddInvoiceForm()" title="Dodaj novi račun dobavljača">
-        +
-      </button>
-      <button class="btn btn-success" (click)="openExportDialog()" title="Export u Excel">
-        📄
-      </button>
+      <div class="list-header-right">
+        <button class="btn btn-primary" (click)="showAddInvoiceForm()" title="Dodaj novi račun dobavljača">
+          +
+        </button>
+        <button class="btn btn-success" (click)="openExportDialog()" title="Export u Excel">
+          📄
+        </button>
+      </div>
     </div>
   </header>
 
