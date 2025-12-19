@@ -97,7 +97,7 @@ public class PurchaseInvoicesController : ControllerBase
             
             // Automatski postavi SektorId iz korisnikovog zapisa
             var korisnik = await _korisnikService.GetKorisnikByIdAsync(userId);
-            if (korisnik != null && korisnik.SektorId.HasValue && !request.SektorId.HasValue)
+            if (korisnik != null && korisnik.SektorId > 0 && !request.SektorId.HasValue)
             {
                 request = request with { SektorId = korisnik.SektorId };
             }
