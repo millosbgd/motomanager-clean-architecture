@@ -87,8 +87,8 @@
   </section>
 
   <!-- Modal za dodavanje ulaznog računa -->
-  <div *ngIf="showAddForm" class="modal-overlay" (click)="cancelAdd()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+  <div *ngIf="showAddForm" class="modal-overlay" (mousedown)="cancelAdd()">
+    <div class="modal-content" (mousedown)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Dodaj novi račun dobavljača</h2>
         <button class="close-btn" (click)="cancelAdd()">&times;</button>
@@ -149,8 +149,8 @@
   </div>
 
   <!-- Modal za ažuriranje ulaznog računa -->
-  <div *ngIf="editingInvoice" class="modal-overlay" (click)="cancelEdit()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+  <div *ngIf="editingInvoice" class="modal-overlay" (mousedown)="cancelEdit()">
+    <div class="modal-content" (mousedown)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Izmeni račun dobavljača</h2>
         <button class="close-btn" (click)="cancelEdit()">&times;</button>
