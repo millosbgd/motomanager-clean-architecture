@@ -39,6 +39,7 @@ export class PurchaseInvoicesComponent implements OnInit {
   showAddForm = false;
   showExportDialog = false;
   editingInvoice: PurchaseInvoice | null = null;
+  openDropdownId: number | null = null;
   
   newInvoice: CreatePurchaseInvoiceRequest = {
     brojRacuna: '',
@@ -166,6 +167,14 @@ export class PurchaseInvoicesComponent implements OnInit {
 
   cancelAdd(): void {
     this.showAddForm = false;
+  }
+
+  toggleDropdown(invoiceId: number): void {
+    this.openDropdownId = this.openDropdownId === invoiceId ? null : invoiceId;
+  }
+
+  closeDropdown(): void {
+    this.openDropdownId = null;
   }
 
   calculateAmounts(): void {
