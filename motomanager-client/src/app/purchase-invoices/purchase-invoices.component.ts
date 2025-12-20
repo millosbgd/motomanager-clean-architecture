@@ -101,8 +101,10 @@ export class PurchaseInvoicesComponent implements OnInit {
       this.filterVoziloId
     ).subscribe({
       next: (data) => {
-        this.invoices = data;
-        this.filteredInvoices = data;
+        // Sort by date descending (newest first) as backup if backend doesn't sort
+        const sortedData = data.sort((a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime());
+        this.invoices = sortedData;
+        this.filteredInvoices = sortedData;
         this.loading = false;
       },
       error: (err) => {
