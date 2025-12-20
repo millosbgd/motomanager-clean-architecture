@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PurchaseInvoiceService } from '../services/purchase-invoice.service';
@@ -70,7 +70,8 @@ export class PurchaseInvoicesComponent implements OnInit {
     private vehicleService: VehicleService,
     private sektorService: SektorService,
     private korisnikService: KorisnikService,
-    public auth: AuthService
+    public auth: AuthService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -82,7 +83,9 @@ export class PurchaseInvoicesComponent implements OnInit {
     // Close dropdown when clicking outside
     document.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.dropdown')) {
+      if (!tangZone.run(() => {
+          this.openDropdownId = null;
+        })wn')) {
         this.openDropdownId = null;
       }
     });
@@ -177,12 +180,19 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.showAddForm = false;
   }
 
-  toggleDropdown(invoiceId: number): void {
+  toggleDropdown(invoiceId: number, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.openDropdownId = this.openDropdownId === invoiceId ? null : invoiceId;
   }
 
   closeDropdown(): void {
     this.openDropdownId = null;
+  }
+
+  trackByInvoiceId(index: number, invoice: PurchaseInvoice): number {
+    return invoice.id;
   }
 
   calculateAmounts(): void {

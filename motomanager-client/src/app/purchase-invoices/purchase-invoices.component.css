@@ -139,6 +139,8 @@ th {
 
 tbody tr {
   transition: none;
+  /* Prevent any layout shifts during render */
+  will-change: auto;
 }
 
 tbody tr:hover {
@@ -177,6 +179,7 @@ tfoot td {
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
 .btn-menu:hover {
@@ -190,14 +193,17 @@ tfoot td {
 
 .dropdown-content {
   position: absolute;
-  right: -5px;
-  left: -5px;
-  top: -1px;
+  right: 0;
+  top: 100%;
+  margin-top: 2px;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   z-index: 9999;
   border-radius: 4px;
   border: 1px solid #ccc;
+  min-width: 100px;
+  /* Prevent layout shift */
+  will-change: transform;
 }
 
 .dropdown-content a {

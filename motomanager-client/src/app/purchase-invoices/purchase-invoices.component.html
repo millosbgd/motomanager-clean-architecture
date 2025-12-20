@@ -63,7 +63,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let invoice of filteredInvoices">
+        <tr *ngFor="let invoice of filteredInvoices; trackBy: trackByInvoiceId">
           <td>{{ invoice.brojRacuna }}</td>
           <td>{{ formatDate(invoice.datum) }}</td>
           <td>{{ invoice.dobavljacNaziv }}</td>
@@ -74,7 +74,7 @@
           <td>{{ invoice.iznosBruto | number:'1.2-2' }}</td>
           <td class="actions">
             <div class="dropdown">
-              <button class="btn btn-menu" (click)="toggleDropdown(invoice.id)" [class.hidden]="openDropdownId === invoice.id">⋮</button>
+              <button class="btn btn-menu" (click)="toggleDropdown(invoice.id, $event)" [class.hidden]="openDropdownId === invoice.id">⋮</button>
               <div class="dropdown-content" *ngIf="openDropdownId === invoice.id">
                 <a (click)="editInvoice(invoice); closeDropdown()">Izmeni</a>
                 <a (click)="deleteInvoice(invoice.id); closeDropdown()">Obriši</a>
