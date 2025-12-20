@@ -83,10 +83,10 @@ export class PurchaseInvoicesComponent implements OnInit {
     // Close dropdown when clicking outside
     document.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!tangZone.run(() => {
+      if (!target.closest('.dropdown')) {
+        this.ngZone.run(() => {
           this.openDropdownId = null;
-        })wn')) {
-        this.openDropdownId = null;
+        });
       }
     });
   }
