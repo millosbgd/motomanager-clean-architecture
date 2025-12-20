@@ -73,13 +73,8 @@
           <td>{{ invoice.iznosPDV | number:'1.2-2' }}</td>
           <td>{{ invoice.iznosBruto | number:'1.2-2' }}</td>
           <td class="actions">
-            <div class="dropdown">
-              <button class="btn btn-menu" (click)="toggleDropdown(invoice.id, $event)" [class.hidden]="openDropdownId === invoice.id">⋮</button>
-              <div class="dropdown-content" *ngIf="openDropdownId === invoice.id">
-                <a (click)="editInvoice(invoice); closeDropdown()">Izmeni</a>
-                <a (click)="deleteInvoice(invoice.id); closeDropdown()">Obriši</a>
-              </div>
-            </div>
+            <button class="btn-icon btn-icon-edit" (click)="editInvoice(invoice)" title="Izmeni">✎</button>
+            <button class="btn-icon btn-icon-delete" (click)="deleteInvoice(invoice.id)" title="Obriši">🗑</button>
           </td>
         </tr>
       </tbody>
