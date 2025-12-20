@@ -30,14 +30,14 @@
     </div>
     
     <div class="list-header">
-      <button class="btn btn-filter" (click)="toggleFilters()" title="{{ showFilters ? 'Sakrij filtere' : 'Prikaži filtere' }}">
+      <button class="btn-icon btn-icon-filter" (click)="toggleFilters()" title="{{ showFilters ? 'Sakrij filtere' : 'Prikaži filtere' }}">
         {{ showFilters ? '▲' : '▼' }}
       </button>
       <div class="list-header-right">
-        <button class="btn btn-primary" (click)="showAddInvoiceForm()" title="Dodaj novi račun dobavljača">
+        <button class="btn-icon btn-icon-add" (click)="showAddInvoiceForm()" title="Dodaj novi račun dobavljača">
           +
         </button>
-        <button class="btn btn-success" (click)="openExportDialog()" title="Export u Excel">
+        <button class="btn-icon btn-icon-export" (click)="openExportDialog()" title="Export u Excel">
           📄
         </button>
       </div>

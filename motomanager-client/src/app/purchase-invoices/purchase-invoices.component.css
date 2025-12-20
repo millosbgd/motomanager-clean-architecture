@@ -56,15 +56,19 @@ header {
   color: white;
 }
 
-.btn-filter {
-  background-color: #34495e;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  height: 32px;
+.btn-icon-filter {
+  color: #34495e;
+  font-size: 18px;
+}
+
+.btn-icon-add {
+  color: #3498db;
+  font-size: 24px;
+}
+
+.btn-icon-export {
+  color: #28a745;
+  font-size: 20px;
 }
 
 .list-header {
