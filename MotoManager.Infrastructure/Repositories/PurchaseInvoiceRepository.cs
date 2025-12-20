@@ -48,6 +48,9 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
             query = query.Where(i => i.VoziloId == voziloId.Value);
         }
         
+        // Order by Datum descending (newest first)
+        query = query.OrderByDescending(i => i.Datum);
+        
         return await query.ToListAsync();
     }
 
