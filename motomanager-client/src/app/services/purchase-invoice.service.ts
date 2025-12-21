@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PurchaseInvoice, CreatePurchaseInvoiceRequest, UpdatePurchaseInvoiceRequest } from '../models/purchase-invoice.model';
+import { PurchaseInvoice, CreatePurchaseInvoiceRequest, UpdatePurchaseInvoiceRequest, PagedResult } from '../models/purchase-invoice.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -16,8 +16,10 @@ export class PurchaseInvoiceService {
     datumOd?: string, 
     datumDo?: string, 
     dobavljacId?: number | null, 
-    voziloId?: number | null
-  ): Observable<PurchaseInvoice[]> {
+    voziloId?: number | null,
+    pageNumber: number = 1,
+    pageSize: number = 20
+  ): Observable<PagedResult<PurchaseInvoice>> {
     let params: any = {};
     
     if (datumOd) {
@@ -33,7 +35,13 @@ export class PurchaseInvoiceService {
       params.voziloId = voziloId.toString();
     }
     
-    return this.http.get<PurchaseInvoice[]>(this.apiUrl, { params });
+    params.pageNumber = pageNumber.toString();
+    params.pageSize = pageSize.toString();
+    
+    // Add cache busting parameter
+    params._t = new Date().getTime();
+    
+    return this.http.get<PagedResult<PurchaseInvoice>>(this.apiUrl, { params });
   }
 
   getPurchaseInvoiceById(id: number): Observable<PurchaseInvoice> {

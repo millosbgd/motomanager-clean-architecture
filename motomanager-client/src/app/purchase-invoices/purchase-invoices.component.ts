@@ -29,6 +29,12 @@ export class PurchaseInvoicesComponent implements OnInit {
   loading = false;
   error: string | null = null;
   
+  // Pagination
+  currentPage = 1;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
+  
   // Filters
   showFilters = false;
   filterDateFrom: string = '';
@@ -98,11 +104,16 @@ export class PurchaseInvoicesComponent implements OnInit {
       this.filterDateFrom || undefined,
       this.filterDateTo || undefined,
       this.filterDobavljacId,
-      this.filterVoziloId
+      this.filterVoziloId,
+      this.currentPage,
+      this.pageSize
     ).subscribe({
-      next: (data) => {
-        this.invoices = data;
-        this.filteredInvoices = data;
+      next: (pagedResult) => {
+        this.invoices = pagedResult.data;
+        this.filteredInvoices = pagedResult.data;
+        this.totalCount = pagedResult.totalCount;
+        this.totalPages = pagedResult.totalPages;
+        this.currentPage = pagedResult.currentPage;
         this.loading = false;
       },
       error: (err) => {
@@ -309,6 +320,8 @@ export class PurchaseInvoicesComponent implements OnInit {
   }
 
   applyFilters(): void {
+    // Reset to first page when filters change
+    this.currentPage = 1;
     // Server-side filtering - reload data from API with filters
     this.loadInvoices();
   }
@@ -318,6 +331,7 @@ export class PurchaseInvoicesComponent implements OnInit {
     this.filterDateTo = '';
     this.filterDobavljacId = null;
     this.filterVoziloId = null;
+    this.currentPage = 1;
     this.loadInvoices();
   }
 
@@ -363,5 +377,45 @@ export class PurchaseInvoicesComponent implements OnInit {
         }
       }
     });
+  }
+
+  // Pagination methods
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadInvoices();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadInvoices();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadInvoices();
+    }
+  }
+
+  get pageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+    
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    return pages;
   }
 }

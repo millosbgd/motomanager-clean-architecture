@@ -89,6 +89,28 @@
       </tfoot>
     </table>
     <p *ngIf="filteredInvoices.length === 0 && !loading" class="no-data">Nema računa dobavljača koji odgovaraju filterima.</p>
+    
+    <!-- Pagination Controls -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+        &#8249;
+      </button>
+      
+      <button *ngFor="let page of pageNumbers" 
+              class="pagination-btn"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        &#8250;
+      </button>
+      
+      <span class="pagination-info">
+        Strana {{ currentPage }} od {{ totalPages }} (ukupno {{ totalCount }} stavki)
+      </span>
+    </div>
   </section>
 
   <!-- Modal za dodavanje ulaznog računa -->

@@ -14,6 +14,16 @@ export interface PurchaseInvoice {
   sektorNaziv: string | null;
 }
 
+export interface PagedResult<T> {
+  data: T[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
 export interface CreatePurchaseInvoiceRequest {
   brojRacuna: string;
   datum: Date;
