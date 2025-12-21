@@ -109,11 +109,12 @@ export class PurchaseInvoicesComponent implements OnInit {
       this.pageSize
     ).subscribe({
       next: (pagedResult) => {
-        this.invoices = pagedResult.data;
-        this.filteredInvoices = pagedResult.data;
-        this.totalCount = pagedResult.totalCount;
-        this.totalPages = pagedResult.totalPages;
-        this.currentPage = pagedResult.currentPage;
+        console.log('Received data from backend:', pagedResult);
+        this.invoices = pagedResult.data || [];
+        this.filteredInvoices = pagedResult.data || [];
+        this.totalCount = pagedResult.totalCount || 0;
+        this.totalPages = pagedResult.totalPages || 0;
+        this.currentPage = pagedResult.currentPage || 1;
         this.loading = false;
       },
       error: (err) => {
