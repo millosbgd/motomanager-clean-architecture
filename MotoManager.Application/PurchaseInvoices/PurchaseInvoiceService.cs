@@ -13,17 +13,18 @@ public class PurchaseInvoiceService
         _purchaseInvoiceRepository = purchaseInvoiceRepository;
     }
 
-    public async Task<IEnumerable<PurchaseInvoiceDto>> GetAllPurchaseInvoicesAsync(
+    public async Task<PagedResult<PurchaseInvoiceDto>> GetAllPurchaseInvoicesAsync(
         DateTime? datumOd = null, 
         DateTime? datumDo = null, 
         int? dobavljacId = null, 
-        int? voziloId = null)
+        int? voziloId = null,
+        int pageNumber = 1,
+        int pageSize = 20)
     {
-        // Filtering happens in Repository (SQL WHERE clause)
-        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId) 
-            ?? Enumerable.Empty<PurchaseInvoice>();
+        var pagedResult = await _purchaseInvoiceRepository.GetAllPagedAsync(
+            datumOd, datumDo, dobavljacId, voziloId, pageNumber, pageSize);
         
-        return invoices.Select(i => new PurchaseInvoiceDto(
+        var dtos = pagedResult.Data.Select(i => new PurchaseInvoiceDto(
             i.Id, 
             i.BrojRacuna, 
             i.Datum, 
@@ -39,6 +40,15 @@ public class PurchaseInvoiceService
             i.Korisnik?.ImePrezime,
             i.SektorId,
             i.Sektor?.Naziv));
+
+        return new PagedResult<PurchaseInvoiceDto>
+        {
+            Data = dtos,
+            TotalCount = pagedResult.TotalCount,
+            CurrentPage = pagedResult.CurrentPage,
+            PageSize = pagedResult.PageSize,
+            TotalPages = pagedResult.TotalPages
+        };
     }
 
     public async Task<PurchaseInvoiceDto?> GetPurchaseInvoiceByIdAsync(int id)
@@ -142,7 +152,10 @@ public class PurchaseInvoiceService
         int? dobavljacId = null, 
         int? voziloId = null)
     {
-        var invoices = await _purchaseInvoiceRepository.GetAllAsync(datumOd, datumDo, dobavljacId, voziloId);
+        // Export all results (use large page size to get everything)
+        var pagedResult = await _purchaseInvoiceRepository.GetAllPagedAsync(
+            datumOd, datumDo, dobavljacId, voziloId, 1, 10000);
+        var invoices = pagedResult.Data;
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Računi dobavljača");

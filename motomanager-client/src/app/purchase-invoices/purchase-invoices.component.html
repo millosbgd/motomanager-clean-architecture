@@ -48,7 +48,7 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 
   <section class="invoice-list">
-    <table *ngIf="invoices.length > 0">
+    <table *ngIf="filteredInvoices && filteredInvoices.length > 0">
       <thead>
         <tr>
           <th>Broj računa</th>
@@ -88,7 +88,7 @@
         </tr>
       </tfoot>
     </table>
-    <p *ngIf="filteredInvoices.length === 0 && !loading" class="no-data">Nema računa dobavljača koji odgovaraju filterima.</p>
+    <p *ngIf="filteredInvoices && filteredInvoices.length === 0 && !loading" class="no-data">Nema računa dobavljača koji odgovaraju filterima.</p>
     
     <!-- Pagination Controls -->
     <div *ngIf="totalPages > 1" class="pagination">
