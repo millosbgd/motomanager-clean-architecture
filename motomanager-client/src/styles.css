@@ -74,13 +74,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+  background: linear-gradient(135deg, #b71c1c, #d32f2f);
   border-radius: 10px;
   border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-start));
+  background: linear-gradient(135deg, #c62828, #e53935);
 }
 
 /* Global Button Styles */
