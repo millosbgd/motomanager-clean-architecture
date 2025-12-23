@@ -1,7 +1,7 @@
 <div class="app-layout">
   <nav class="navbar">
     <div class="navbar-brand">
-      <h1>MotoManager</h1>
+      <img src="logo.png" alt="MotoManager" class="logo" />
     </div>
     @if ((auth.isAuthenticated$ | async) && (korisnikService.isRegistered$ | async)) {
       <ul class="navbar-menu">
