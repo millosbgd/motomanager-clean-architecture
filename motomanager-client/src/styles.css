@@ -289,7 +289,7 @@ tbody td {
   color: var(--error);
   padding: 16px 20px;
   border-radius: var(--radius-md);
-  border-left: 4px solid var(--error);
+  border-left: 4px solid #c62828;
   box-shadow: var(--shadow-md);
   margin: 20px 0;
   font-weight: 500;
