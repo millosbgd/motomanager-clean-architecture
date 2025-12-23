@@ -4,35 +4,36 @@
     <div *ngIf="showFilters" class="filters-section">
       <div class="filter-group">
         <label for="filterDateFrom">Datum od:</label>
-        <input type="date" id="filterDateFrom" [(ngModel)]="filterDateFrom" (ngModelChange)="applyFilters()" />
+        <input type="date" id="filterDateFrom" [(ngModel)]="filterDateFrom" placeholder="" />
       </div>
       <div class="filter-group">
         <label for="filterDateTo">Datum do:</label>
-        <input type="date" id="filterDateTo" [(ngModel)]="filterDateTo" (ngModelChange)="applyFilters()" />
+        <input type="date" id="filterDateTo" [(ngModel)]="filterDateTo" placeholder="" />
       </div>
       <div class="filter-group">
         <label for="filterDobavljac">Dobavljač:</label>
-        <select id="filterDobavljac" [(ngModel)]="filterDobavljacId" (ngModelChange)="applyFilters()">
-          <option [ngValue]="null">-- Svi dobavljači --</option>
+        <select id="filterDobavljac" [(ngModel)]="filterDobavljacId">
+          <option [ngValue]="null"></option>
           <option *ngFor="let client of clients" [ngValue]="client.id">{{ client.naziv }}</option>
         </select>
       </div>
       <div class="filter-group">
         <label for="filterVozilo">Vozilo:</label>
-        <select id="filterVozilo" [(ngModel)]="filterVoziloId" (ngModelChange)="applyFilters()">
-          <option [ngValue]="null">-- Sva vozila --</option>
+        <select id="filterVozilo" [(ngModel)]="filterVoziloId">
+          <option [ngValue]="null"></option>
           <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">{{ vehicle.model }} ({{ vehicle.plate }})</option>
         </select>
       </div>
       <div class="filter-group">
         <label for="filterSektor">Sektor:</label>
-        <select id="filterSektor" [(ngModel)]="filterSektorId" (ngModelChange)="applyFilters()">
-          <option [ngValue]="null">-- Svi sektori --</option>
+        <select id="filterSektor" [(ngModel)]="filterSektorId">
+          <option [ngValue]="null"></option>
           <option *ngFor="let sektor of sektori" [ngValue]="sektor.id">{{ sektor.naziv }}</option>
         </select>
       </div>
       <div class="filter-actions">
-        <button class="btn btn-secondary" (click)="clearFilters()">Obriši filtere</button>
+        <button class="btn btn-primary" (click)="applyFilters()">Primeni</button>
+        <button class="btn btn-secondary" (click)="clearFilters()">Obriši</button>
       </div>
     </div>
     
