@@ -18,11 +18,12 @@ public class PurchaseInvoiceService
         DateTime? datumDo = null, 
         int? dobavljacId = null, 
         int? voziloId = null,
+        int? sektorId = null,
         int pageNumber = 1,
         int pageSize = 20)
     {
         var pagedResult = await _purchaseInvoiceRepository.GetAllPagedAsync(
-            datumOd, datumDo, dobavljacId, voziloId, pageNumber, pageSize);
+            datumOd, datumDo, dobavljacId, voziloId, sektorId, pageNumber, pageSize);
         
         var dtos = pagedResult.Data.Select(i => new PurchaseInvoiceDto(
             i.Id, 

@@ -21,6 +21,7 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         DateTime? datumDo = null,
         int? dobavljacId = null,
         int? voziloId = null,
+        int? sektorId = null,
         int pageNumber = 1,
         int pageSize = 20)
     {
@@ -28,21 +29,24 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
         var datumDoParam = new SqlParameter("@DatumDo", (object?)datumDo ?? DBNull.Value);
         var dobavljacIdParam = new SqlParameter("@DobavljacId", (object?)dobavljacId ?? DBNull.Value);
         var voziloIdParam = new SqlParameter("@VoziloId", (object?)voziloId ?? DBNull.Value);
+        var sektorIdParam = new SqlParameter("@SektorId", (object?)sektorId ?? DBNull.Value);
         var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
         var pageSizeParam = new SqlParameter("@PageSize", pageSize);
 
         var sql = @"EXEC sp_GetPurchaseInvoicesPaged 
-                    @DatumOd, @DatumDo, @DobavljacId, @VoziloId, @PageNumber, @PageSize";
+                    @DatumOd, @DatumDo, @DobavljacId, @VoziloId, @SektorId, @PageNumber, @PageSize";
 
         var connection = _context.Database.GetDbConnection();
         await connection.OpenAsync();
 
         using var command = connection.CreateCommand();
         command.CommandText = sql;
+        command.CommandTimeout = 30; // 30 seconds timeout
         command.Parameters.Add(datumOdParam);
         command.Parameters.Add(datumDoParam);
         command.Parameters.Add(dobavljacIdParam);
         command.Parameters.Add(voziloIdParam);
+        command.Parameters.Add(sektorIdParam);
         command.Parameters.Add(pageNumberParam);
         command.Parameters.Add(pageSizeParam);
 
@@ -77,7 +81,8 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
                 invoice.Vozilo = new Vehicle
                 {
                     Id = reader.GetInt32(reader.GetOrdinal("VoziloId")),
-                    Plate = reader.IsDBNull(reader.GetOrdinal("VoziloRegistarskaOznaka")) ? "" : reader.GetString(reader.GetOrdinal("VoziloRegistarskaOznaka"))
+                    Plate = reader.IsDBNull(reader.GetOrdinal("VoziloRegistarskaOznaka")) ? "" : reader.GetString(reader.GetOrdinal("VoziloRegistarskaOznaka")),
+                    Model = reader.IsDBNull(reader.GetOrdinal("VoziloModel")) ? "" : reader.GetString(reader.GetOrdinal("VoziloModel"))
                 };
             }
 
@@ -101,7 +106,7 @@ public class PurchaseInvoiceRepository : IPurchaseInvoiceRepository
             }
 
             totalCount = reader.GetInt32(reader.GetOrdinal("TotalCount"));
-            totalPages = reader.GetInt32(reader.GetOrdinal("TotalPages"));
+            totalPages = Convert.ToInt32(reader.GetDouble(reader.GetOrdinal("TotalPages")));
 
             invoices.Add(invoice);
         }

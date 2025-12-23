@@ -24,6 +24,13 @@
           <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">{{ vehicle.model }} ({{ vehicle.plate }})</option>
         </select>
       </div>
+      <div class="filter-group">
+        <label for="filterSektor">Sektor:</label>
+        <select id="filterSektor" [(ngModel)]="filterSektorId" (ngModelChange)="applyFilters()">
+          <option [ngValue]="null">-- Svi sektori --</option>
+          <option *ngFor="let sektor of sektori" [ngValue]="sektor.id">{{ sektor.naziv }}</option>
+        </select>
+      </div>
       <div class="filter-actions">
         <button class="btn btn-secondary" (click)="clearFilters()">Obriši filtere</button>
       </div>

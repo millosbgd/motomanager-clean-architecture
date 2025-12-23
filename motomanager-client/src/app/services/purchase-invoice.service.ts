@@ -17,6 +17,7 @@ export class PurchaseInvoiceService {
     datumDo?: string, 
     dobavljacId?: number | null, 
     voziloId?: number | null,
+    sektorId?: number | null,
     pageNumber: number = 1,
     pageSize: number = 20
   ): Observable<PagedResult<PurchaseInvoice>> {
@@ -33,6 +34,9 @@ export class PurchaseInvoiceService {
     }
     if (voziloId && voziloId > 0) {
       params.voziloId = voziloId.toString();
+    }
+    if (sektorId && sektorId > 0) {
+      params.sektorId = sektorId.toString();
     }
     
     params.pageNumber = pageNumber.toString();

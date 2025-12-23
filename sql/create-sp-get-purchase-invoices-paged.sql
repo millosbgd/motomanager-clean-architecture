@@ -4,6 +4,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_GetPurchaseInvoicesPaged]
     @DatumDo DATE = NULL,
     @DobavljacId INT = NULL,
     @VoziloId INT = NULL,
+    @SektorId INT = NULL,
     @PageNumber INT = 1,
     @PageSize INT = 20
 AS
@@ -21,7 +22,8 @@ BEGIN
     WHERE (@DatumOd IS NULL OR pi.Datum >= @DatumOd)
         AND (@DatumDo IS NULL OR pi.Datum <= @DatumDo)
         AND (@DobavljacId IS NULL OR pi.DobavljacId = @DobavljacId)
-        AND (@VoziloId IS NULL OR pi.VoziloId = @VoziloId);
+        AND (@VoziloId IS NULL OR pi.VoziloId = @VoziloId)
+        AND (@SektorId IS NULL OR pi.SektorId = @SektorId);
     
     -- Get paged results with sorting (newest first)
     SELECT 
@@ -36,9 +38,9 @@ BEGIN
         pi.KorisnikId,
         pi.SektorId,
         d.Naziv AS DobavljacNaziv,
-        v.RegistarskaOznaka AS VoziloRegistarskaOznaka,
-        k.Ime AS KorisnikIme,
-        k.Prezime AS KorisnikPrezime,
+        v.Plate AS VoziloRegistarskaOznaka,
+        v.Model AS VoziloModel,
+        k.ImePrezime AS KorisnikImePrezime,
         s.Naziv AS SektorNaziv,
         @TotalCount AS TotalCount,
         @PageNumber AS CurrentPage,
@@ -53,6 +55,7 @@ BEGIN
         AND (@DatumDo IS NULL OR pi.Datum <= @DatumDo)
         AND (@DobavljacId IS NULL OR pi.DobavljacId = @DobavljacId)
         AND (@VoziloId IS NULL OR pi.VoziloId = @VoziloId)
+        AND (@SektorId IS NULL OR pi.SektorId = @SektorId)
     ORDER BY pi.Datum DESC, pi.Id DESC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;

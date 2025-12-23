@@ -22,16 +22,18 @@ public class PurchaseInvoicesController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<PagedResult<PurchaseInvoiceDto>>> GetAll(
         [FromQuery] DateTime? datumOd = null,
         [FromQuery] DateTime? datumDo = null,
         [FromQuery] int? dobavljacId = null,
         [FromQuery] int? voziloId = null,
+        [FromQuery] int? sektorId = null,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20)
     {
         var pagedResult = await _purchaseInvoiceService.GetAllPurchaseInvoicesAsync(
-            datumOd, datumDo, dobavljacId, voziloId, pageNumber, pageSize);
+            datumOd, datumDo, dobavljacId, voziloId, sektorId, pageNumber, pageSize);
         return Ok(pagedResult);
     }
 

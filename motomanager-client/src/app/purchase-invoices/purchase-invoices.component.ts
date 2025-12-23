@@ -41,6 +41,7 @@ export class PurchaseInvoicesComponent implements OnInit {
   filterDateTo: string = '';
   filterDobavljacId: number | null = null;
   filterVoziloId: number | null = null;
+  filterSektorId: number | null = null;
   
   showAddForm = false;
   showExportDialog = false;
@@ -105,6 +106,7 @@ export class PurchaseInvoicesComponent implements OnInit {
       this.filterDateTo || undefined,
       this.filterDobavljacId,
       this.filterVoziloId,
+      this.filterSektorId,
       this.currentPage,
       this.pageSize
     ).subscribe({

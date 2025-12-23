@@ -10,6 +10,7 @@ public interface IPurchaseInvoiceRepository
         DateTime? datumDo = null, 
         int? dobavljacId = null, 
         int? voziloId = null,
+        int? sektorId = null,
         int pageNumber = 1,
         int pageSize = 20);
     Task<PurchaseInvoice?> GetByIdAsync(int id);
