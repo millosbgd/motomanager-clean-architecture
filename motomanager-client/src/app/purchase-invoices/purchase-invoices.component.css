@@ -155,7 +155,7 @@ tfoot {
 }
 
 tfoot tr.totals-row {
-  border-top: 2px solid #3498db;
+  border-top: 2px solid #c62828;
 }
 
 tfoot td {
@@ -336,15 +336,26 @@ tfoot td {
   min-width: 38px;
 }
 
+.pagination-btn:hover:not(:disabled) {
+  background-color: #ffebee;
+  border-color: #c62828;
+  color: #c62828;
+}
+
+.pagination-btn:focus {
+  outline: 2px solid #c62828;
+  outline-offset: 2px;
+}
+
 .pagination-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
 .pagination-btn.active {
-  background-color: #3498db;
+  background-color: #c62828;
   color: white;
-  border-color: #3498db;
+  border-color: #c62828;
 }
 
 .pagination-info {

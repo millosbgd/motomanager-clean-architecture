@@ -236,8 +236,9 @@ table {
 }
 
 thead {
-  background: linear-gradient(135deg, #c62828 0%, #e53935 100%);
+  background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
   color: white;
+  border-bottom: 2px solid #c62828;
 }
 
 thead th {
@@ -251,7 +252,7 @@ thead th {
 
 tbody tr {
   transition: all var(--transition-fast);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #ffcdd2;
 }
 
 tbody tr:last-child {
