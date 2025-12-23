@@ -115,7 +115,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+  background: linear-gradient(135deg, #b71c1c, #d32f2f);
   color: white;
 }
 
@@ -353,15 +353,14 @@ tbody td {
   border-bottom: 2px solid #c62828;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 
 .modal-header h2 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   margin: 0;
-  display: none;
 }
 
 .close-btn {
