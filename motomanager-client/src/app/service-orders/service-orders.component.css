@@ -4,16 +4,36 @@
   margin: 0 auto;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+header {
+  margin-bottom: 15px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 28px;
+.list-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.loading, .error, .no-data {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.error {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  border-radius: 4px;
+}
+
+.no-data {
+  color: #7f8c8d;
 }
 
 .table-container {
@@ -26,76 +46,92 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
 }
 
 thead {
-  background-color: #f8f9fa;
+  background-color: #3498db;
+  color: white;
+}
+
+th, td {
+  padding: 4px 8px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
 }
 
 th {
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid #dee2e6;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-td {
-  padding: 12px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-tbody tr:hover {
-  background-color: #f8f9fa;
+tbody tr {
+  transition: none;
+  will-change: auto;
 }
 
 .actions {
+  white-space: nowrap;
   display: flex;
-  gap: 8px;
+  gap: 4px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.btn-icon:hover {
+  opacity: 1;
+}
+
+.btn-icon-add {
+  color: #3498db;
+  font-size: 24px;
+}
+
+.btn-icon-edit {
+  color: #3498db;
+}
+
+.btn-icon-delete {
+  color: #e74c3c;
 }
 
 .btn {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  margin-right: 8px;
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-edit {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-edit:hover {
-  background-color: #218838;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-delete:hover {
-  background-color: #c82333;
+  padding: 6px 12px;
+  height: 32px;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #95a5a6;
   color: white;
 }
 
-.btn-secondary:hover {
-  background-color: #5a6268;
+.btn-cancel {
+  background-color: #95a5a6;
+  color: white;
 }
 
 .loading {
