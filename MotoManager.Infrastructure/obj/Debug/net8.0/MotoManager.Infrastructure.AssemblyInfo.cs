@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MotoManager.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67a88fc5fdebc916a9b7b7969ab0bb28cfb579a9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6a660a960cf3da61715d5172ddaf0b2970cc377b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MotoManager.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MotoManager.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -15,7 +15,6 @@ BEGIN
         v.Id,
         v.Plate,
         v.Model,
-        v.Year,
         v.ClientId,
         c.Naziv AS ClientNaziv,
         @TotalCount AS TotalCount,

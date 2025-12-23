@@ -14,11 +14,11 @@ BEGIN
     SELECT 
         so.Id,
         so.BrojNaloga,
-        so.DatumKreiranja,
-        so.DatumZavrsetka,
-        so.Status,
-        so.OpisProblema,
-        so.VoziloId,
+        so.Datum,
+        so.ClientId,
+        so.VehicleId,
+        so.OpisRada,
+        so.Kilometraza,
         v.Plate AS VoziloRegistarskaOznaka,
         v.Model AS VoziloModel,
         @TotalCount AS TotalCount,
@@ -26,8 +26,8 @@ BEGIN
         @PageSize AS PageSize,
         CEILING(CAST(@TotalCount AS FLOAT) / @PageSize) AS TotalPages
     FROM ServiceOrders so
-    LEFT JOIN Vehicles v ON so.VoziloId = v.Id
-    ORDER BY so.DatumKreiranja DESC, so.Id DESC
+    LEFT JOIN Vehicles v ON so.VehicleId = v.Id
+    ORDER BY so.Datum DESC, so.Id DESC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;
 END

@@ -34,6 +34,7 @@ public class VehicleRepository : IVehicleRepository
 
         var vehicles = await _db.Vehicles
             .FromSqlRaw("EXEC sp_GetVehiclesPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
+            .AsNoTracking()
             .ToListAsync();
 
         if (vehicles.Count == 0)
@@ -46,7 +47,15 @@ public class VehicleRepository : IVehicleRepository
         var currentPage = (int)_db.Entry(firstVehicle).Property("CurrentPage").CurrentValue!;
         var totalPages = (int)_db.Entry(firstVehicle).Property("TotalPages").CurrentValue!;
 
-        return (vehicles, totalCount, currentPage, pageSize, totalPages);
+        // Load Client navigation properties
+        var vehicleIds = vehicles.Select(v => v.Id).ToList();
+        var vehiclesWithClients = await _db.Vehicles
+            .Include(v => v.Client)
+            .Where(v => vehicleIds.Contains(v.Id))
+            .AsNoTracking()
+            .ToListAsync();
+
+        return (vehiclesWithClients, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<Vehicle?> GetByIdAsync(int id)

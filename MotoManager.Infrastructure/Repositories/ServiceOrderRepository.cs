@@ -34,6 +34,7 @@ public class ServiceOrderRepository : IServiceOrderRepository
 
         var serviceOrders = await _context.ServiceOrders
             .FromSqlRaw("EXEC sp_GetServiceOrdersPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
+            .AsNoTracking()
             .ToListAsync();
 
         if (serviceOrders.Count == 0)
@@ -46,7 +47,17 @@ public class ServiceOrderRepository : IServiceOrderRepository
         var currentPage = (int)_context.Entry(firstOrder).Property("CurrentPage").CurrentValue!;
         var totalPages = (int)_context.Entry(firstOrder).Property("TotalPages").CurrentValue!;
 
-        return (serviceOrders, totalCount, currentPage, pageSize, totalPages);
+        // Load navigation properties
+        var orderIds = serviceOrders.Select(so => so.Id).ToList();
+        var ordersWithNav = await _context.ServiceOrders
+            .Include(so => so.Client)
+            .Include(so => so.Vehicle)
+            .Include(so => so.Korisnik)
+            .Where(so => orderIds.Contains(so.Id))
+            .AsNoTracking()
+            .ToListAsync();
+
+        return (ordersWithNav, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<ServiceOrder?> GetByIdAsync(int id)
