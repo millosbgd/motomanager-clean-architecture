@@ -1,13 +1,15 @@
 <div class="container">
   <header>
-    <h1>Vozila</h1>
     <div class="list-header">
-      <button 
-        class="btn btn-primary" 
-        (click)="showAddVehicleForm()" 
-        [disabled]="loading">
-        + Dodaj novo vozilo
-      </button>
+      <div class="list-header-right">
+        <button 
+          class="btn-icon btn-icon-add" 
+          (click)="showAddVehicleForm()" 
+          [disabled]="loading"
+          title="Dodaj novo vozilo">
+          +
+        </button>
+      </div>
     </div>
   </header>
 
@@ -32,8 +34,8 @@
           <td>{{ vehicle.plate }}</td>
           <td>{{ vehicle.clientNaziv }}</td>
           <td class="actions">
-            <button class="btn btn-edit" (click)="editVehicle(vehicle)">Izmeni</button>
-            <button class="btn btn-delete" (click)="deleteVehicle(vehicle.id)">Obriši</button>
+            <button class="btn-icon btn-icon-edit" (click)="editVehicle(vehicle)" title="Izmeni">✎</button>
+            <button class="btn-icon btn-icon-delete" (click)="deleteVehicle(vehicle.id)" title="Obriši">🗑</button>
           </td>
         </tr>
       </tbody>

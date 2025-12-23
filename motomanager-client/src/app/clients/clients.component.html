@@ -1,10 +1,11 @@
 <div class="container">
   <header>
-    <h1>Klijenti</h1>
     <div class="list-header">
-      <button class="btn btn-primary" (click)="showAddClientForm()">
-        + Dodaj novog klijenta
-      </button>
+      <div class="list-header-right">
+        <button class="btn-icon btn-icon-add" (click)="showAddClientForm()" title="Dodaj novog klijenta">
+          +
+        </button>
+      </div>
     </div>
   </header>
 
@@ -33,9 +34,9 @@
           <td>{{ client.telefon }}</td>
           <td>{{ client.email }}</td>
           <td class="actions">
-            <button class="btn btn-primary btn-small" (click)="showVehicles(client)">Vozila</button>
-            <button class="btn btn-edit" (click)="editClient(client)">Izmeni</button>
-            <button class="btn btn-delete" (click)="deleteClient(client.id)">Obriši</button>
+            <button class="btn-icon" (click)="showVehicles(client)" title="Vozila">🚗</button>
+            <button class="btn-icon btn-icon-edit" (click)="editClient(client)" title="Izmeni">✎</button>
+            <button class="btn-icon btn-icon-delete" (click)="deleteClient(client.id)" title="Obriši">🗑</button>
           </td>
         </tr>
       </tbody>
