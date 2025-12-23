@@ -236,7 +236,7 @@ table {
 }
 
 thead {
-  background-color: #e57373;
+  background: linear-gradient(135deg, #c62828 0%, #e53935 100%);
   color: white;
 }
 
