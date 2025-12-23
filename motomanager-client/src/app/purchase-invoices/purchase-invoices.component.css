@@ -53,6 +53,16 @@ header {
   gap: 5px;
 }
 
+.btn-icon-apply {
+  color: #27ae60;
+  font-size: 20px;
+}
+
+.btn-icon-clear {
+  color: #e74c3c;
+  font-size: 20px;
+}
+
 .btn-secondary {
   background-color: #95a5a6;
   color: white;
