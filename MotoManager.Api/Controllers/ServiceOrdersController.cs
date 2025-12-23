@@ -23,6 +23,13 @@ public class ServiceOrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("paged")]
+    public async Task<ActionResult> GetAllPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+    {
+        var result = await _serviceOrderService.GetAllServiceOrdersPagedAsync(pageNumber, pageSize);
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ServiceOrderDto>> GetById(int id)
     {

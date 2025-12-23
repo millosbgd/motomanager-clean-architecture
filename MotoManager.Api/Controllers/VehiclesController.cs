@@ -23,6 +23,13 @@ public class VehiclesController : ControllerBase
         return Ok(vehicles);
     }
 
+    [HttpGet("paged")]
+    public async Task<ActionResult> GetAllPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+    {
+        var result = await _service.GetAllPagedAsync(pageNumber, pageSize);
+        return Ok(result);
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<VehicleDto>> GetById(int id)
     {

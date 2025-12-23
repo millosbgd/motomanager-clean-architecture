@@ -30,7 +30,36 @@ public class ServiceOrderService
             o.OpisRada, 
             o.Kilometraza,
             o.KorisnikId,
-            o.Korisnik?.ImePrezime));
+            o.Korisnik?.ImePrezime ?? ""
+        ));
+    }
+
+    public async Task<object> GetAllServiceOrdersPagedAsync(int pageNumber, int pageSize)
+    {
+        var (items, totalCount, currentPage, pageSizeResult, totalPages) = await _serviceOrderRepository.GetAllPagedAsync(pageNumber, pageSize);
+        var dtos = items.Select(o => new ServiceOrderDto(
+            o.Id, 
+            o.BrojNaloga, 
+            o.Datum, 
+            o.ClientId, 
+            "",
+            o.VehicleId, 
+            "",
+            "",
+            o.OpisRada, 
+            o.Kilometraza,
+            o.KorisnikId,
+            ""
+        ));
+        
+        return new
+        {
+            Items = dtos,
+            TotalCount = totalCount,
+            CurrentPage = currentPage,
+            PageSize = pageSizeResult,
+            TotalPages = totalPages
+        };
     }
 
     public async Task<ServiceOrderDto?> GetServiceOrderByIdAsync(int id)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
@@ -24,6 +25,28 @@ public class ServiceOrderRepository : IServiceOrderRepository
             .Include(so => so.Vehicle)
             .Include(so => so.Korisnik)
             .ToListAsync();
+    }
+
+    public async Task<(IEnumerable<ServiceOrder> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
+        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+
+        var serviceOrders = await _context.ServiceOrders
+            .FromSqlRaw("EXEC sp_GetServiceOrdersPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
+            .ToListAsync();
+
+        if (serviceOrders.Count == 0)
+        {
+            return (new List<ServiceOrder>(), 0, pageNumber, pageSize, 0);
+        }
+
+        var firstOrder = serviceOrders[0];
+        var totalCount = (int)_context.Entry(firstOrder).Property("TotalCount").CurrentValue!;
+        var currentPage = (int)_context.Entry(firstOrder).Property("CurrentPage").CurrentValue!;
+        var totalPages = (int)_context.Entry(firstOrder).Property("TotalPages").CurrentValue!;
+
+        return (serviceOrders, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<ServiceOrder?> GetByIdAsync(int id)

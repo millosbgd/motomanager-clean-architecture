@@ -21,6 +21,21 @@ public class ClientService
         return clients.Select(c => new ClientDto(c.Id, c.Naziv, c.Adresa, c.Grad, c.PIB, c.Telefon, c.Email));
     }
 
+    public async Task<object> GetAllClientsPagedAsync(int pageNumber, int pageSize)
+    {
+        var (items, totalCount, currentPage, pageSizeResult, totalPages) = await _clientRepository.GetAllPagedAsync(pageNumber, pageSize);
+        var dtos = items.Select(c => new ClientDto(c.Id, c.Naziv, c.Adresa, c.Grad, c.PIB, c.Telefon, c.Email));
+        
+        return new
+        {
+            Items = dtos,
+            TotalCount = totalCount,
+            CurrentPage = currentPage,
+            PageSize = pageSizeResult,
+            TotalPages = totalPages
+        };
+    }
+
     public async Task<ClientDto?> GetClientByIdAsync(int id)
     {
         var client = await _clientRepository.GetByIdAsync(id);

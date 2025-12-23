@@ -23,6 +23,13 @@ public class ClientsController : ControllerBase
         return Ok(clients);
     }
 
+    [HttpGet("paged")]
+    public async Task<ActionResult> GetAllPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+    {
+        var result = await _clientService.GetAllClientsPagedAsync(pageNumber, pageSize);
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ClientDto>> GetById(int id)
     {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
@@ -19,6 +20,28 @@ public class ClientRepository : IClientRepository
     public async Task<IEnumerable<Client>> GetAllAsync()
     {
         return await _context.Clients.ToListAsync();
+    }
+
+    public async Task<(IEnumerable<Client> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
+        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+
+        var clients = await _context.Clients
+            .FromSqlRaw("EXEC sp_GetClientsPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
+            .ToListAsync();
+
+        if (clients.Count == 0)
+        {
+            return (new List<Client>(), 0, pageNumber, pageSize, 0);
+        }
+
+        var firstClient = clients[0];
+        var totalCount = (int)_context.Entry(firstClient).Property("TotalCount").CurrentValue!;
+        var currentPage = (int)_context.Entry(firstClient).Property("CurrentPage").CurrentValue!;
+        var totalPages = (int)_context.Entry(firstClient).Property("TotalPages").CurrentValue!;
+
+        return (clients, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<Client?> GetByIdAsync(int id)

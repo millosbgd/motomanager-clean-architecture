@@ -20,6 +20,21 @@ public class MaterialService
         return materials.Select(m => new MaterialDto(m.Id, m.Naziv, m.JedinicnaCena));
     }
 
+    public async System.Threading.Tasks.Task<object> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var (items, totalCount, currentPage, pageSizeResult, totalPages) = await _repository.GetAllPagedAsync(pageNumber, pageSize);
+        var dtos = items.Select(m => new MaterialDto(m.Id, m.Naziv, m.JedinicnaCena));
+        
+        return new
+        {
+            Items = dtos,
+            TotalCount = totalCount,
+            CurrentPage = currentPage,
+            PageSize = pageSizeResult,
+            TotalPages = totalPages
+        };
+    }
+
     public async System.Threading.Tasks.Task<MaterialDto?> GetByIdAsync(int id)
     {
         var material = await _repository.GetByIdAsync(id);

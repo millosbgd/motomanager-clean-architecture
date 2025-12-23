@@ -23,6 +23,13 @@ public class MaterialsController : ControllerBase
         return Ok(materials);
     }
 
+    [HttpGet("paged")]
+    public async System.Threading.Tasks.Task<ActionResult> GetAllPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+    {
+        var result = await _service.GetAllPagedAsync(pageNumber, pageSize);
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     public async System.Threading.Tasks.Task<ActionResult<MaterialDto>> GetById(int id)
     {

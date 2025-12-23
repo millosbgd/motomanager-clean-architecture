@@ -28,6 +28,27 @@ public class VehicleService
         )).ToList();
     }
 
+    public async Task<object> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var (items, totalCount, currentPage, pageSizeResult, totalPages) = await _repo.GetAllPagedAsync(pageNumber, pageSize);
+        var dtos = items.Select(v => new VehicleDto(
+            v.Id,
+            v.Model,
+            v.Plate,
+            v.ClientId,
+            ""  // ClientNaziv will be in the result from procedure
+        )).ToList();
+        
+        return new
+        {
+            Items = dtos,
+            TotalCount = totalCount,
+            CurrentPage = currentPage,
+            PageSize = pageSizeResult,
+            TotalPages = totalPages
+        };
+    }
+
     public async Task<VehicleDto?> GetByIdAsync(int id)
     {
         var v = await _repo.GetByIdAsync(id);
