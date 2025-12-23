@@ -1,8 +1,13 @@
 <div class="container">
-  <div class="header">
-    <h1>Šifarnik materijala</h1>
-    <button class="btn btn-primary" (click)="showAddMaterialForm()">Dodaj materijal</button>
-  </div>
+  <header>
+    <div class="list-header">
+      <div class="list-header-right">
+        <button class="btn-icon btn-icon-add" (click)="showAddMaterialForm()" title="Dodaj novi materijal">
+          +
+        </button>
+      </div>
+    </div>
+  </header>
 
   <div *ngIf="loading" class="loading">Učitavanje...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
@@ -21,8 +26,8 @@
           <td>{{ material.naziv }}</td>
           <td>{{ material.jedinicnaCena | number:'1.2-2' }} RSD</td>
           <td class="actions">
-            <button class="btn btn-edit" (click)="editMaterial(material)">Izmeni</button>
-            <button class="btn btn-delete" (click)="deleteMaterial(material.id)">Obriši</button>
+            <button class="btn-icon btn-icon-edit" (click)="editMaterial(material)" title="Izmeni">✎</button>
+            <button class="btn-icon btn-icon-delete" (click)="deleteMaterial(material.id)" title="Obriši">🗑</button>
           </td>
         </tr>
         <tr *ngIf="materials.length === 0 && !loading">
