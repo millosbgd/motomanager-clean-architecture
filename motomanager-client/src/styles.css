@@ -347,12 +347,13 @@ tbody td {
 }
 
 .modal-header {
-  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-  color: white;
-  padding: 24px 30px;
+  background: white;
+  color: #2c3e50;
+  padding: 16px 30px;
+  border-bottom: 2px solid #c62828;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -360,12 +361,13 @@ tbody td {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
+  display: none;
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: transparent;
   border: none;
-  color: white;
+  color: #2c3e50;
   font-size: 28px;
   width: 36px;
   height: 36px;
@@ -380,7 +382,8 @@ tbody td {
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #ffebee;
+  color: #c62828;
   transform: rotate(90deg);
 }
 
