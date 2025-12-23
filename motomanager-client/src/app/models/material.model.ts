@@ -14,3 +14,11 @@ export interface UpdateMaterialRequest {
   naziv: string;
   jedinicnaCena: number;
 }
+
+export interface PagedResult<T> {
+  data: T[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}

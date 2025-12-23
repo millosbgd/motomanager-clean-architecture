@@ -21,6 +21,12 @@ export class VehiclesComponent implements OnInit {
   showAddForm = false;
   loading = false;
   error: string | null = null;
+  
+  // Pagination
+  currentPage = 1;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
 
   constructor(
     private vehicleService: VehicleService,
@@ -42,9 +48,12 @@ export class VehiclesComponent implements OnInit {
   loadVehicles(): void {
     this.loading = true;
     this.error = null;
-    this.vehicleService.getAllVehicles().subscribe({
-      next: (data) => {
-        this.vehicles = data;
+    this.vehicleService.getVehiclesPaged(this.currentPage, this.pageSize).subscribe({
+      next: (pagedResult) => {
+        this.vehicles = pagedResult.data || [];
+        this.totalCount = pagedResult.totalCount || 0;
+        this.totalPages = pagedResult.totalPages || 0;
+        this.currentPage = pagedResult.currentPage || 1;
         this.loading = false;
       },
       error: (err) => {
@@ -143,5 +152,43 @@ export class VehiclesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // Pagination methods
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadVehicles();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadVehicles();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadVehicles();
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+    
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }

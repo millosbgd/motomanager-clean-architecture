@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Vehicle, CreateVehicleRequest, UpdateVehicleRequest } from '../models/vehicle.model';
+import { Vehicle, CreateVehicleRequest, UpdateVehicleRequest, PagedResult } from '../models/vehicle.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -14,6 +14,15 @@ export class VehicleService {
 
   getAllVehicles(): Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(this.apiUrl);
+  }
+
+  getVehiclesPaged(pageNumber: number = 1, pageSize: number = 20): Observable<PagedResult<Vehicle>> {
+    let params: any = {
+      pageNumber: pageNumber.toString(),
+      pageSize: pageSize.toString(),
+      _t: new Date().getTime()
+    };
+    return this.http.get<PagedResult<Vehicle>>(`${this.apiUrl}/paged`, { params });
   }
 
   getVehicleById(id: number): Observable<Vehicle> {

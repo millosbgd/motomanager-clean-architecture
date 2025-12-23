@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ServiceOrder, CreateServiceOrderRequest, UpdateServiceOrderRequest } from '../models/service-order.model';
+import { ServiceOrder, CreateServiceOrderRequest, UpdateServiceOrderRequest, PagedResult } from '../models/service-order.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -14,6 +14,15 @@ export class ServiceOrderService {
 
   getAllServiceOrders(): Observable<ServiceOrder[]> {
     return this.http.get<ServiceOrder[]>(this.apiUrl);
+  }
+
+  getServiceOrdersPaged(pageNumber: number = 1, pageSize: number = 20): Observable<PagedResult<ServiceOrder>> {
+    let params: any = {
+      pageNumber: pageNumber.toString(),
+      pageSize: pageSize.toString(),
+      _t: new Date().getTime()
+    };
+    return this.http.get<PagedResult<ServiceOrder>>(`${this.apiUrl}/paged`, { params });
   }
 
   getServiceOrderById(id: number): Observable<ServiceOrder> {

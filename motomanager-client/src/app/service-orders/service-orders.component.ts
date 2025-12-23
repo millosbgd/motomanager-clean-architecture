@@ -29,6 +29,12 @@ export class ServiceOrdersComponent implements OnInit {
   loading = false;
   error: string | null = null;
   
+  // Pagination
+  currentPage = 1;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
+  
   showAddForm = false;
   editingOrder: ServiceOrder | null = null;
   activeTab: 'info' | 'labor' | 'material' = 'info';
@@ -89,12 +95,15 @@ export class ServiceOrdersComponent implements OnInit {
     this.error = null;
     
     Promise.all([
-      this.serviceOrderService.getAllServiceOrders().toPromise(),
+      this.serviceOrderService.getServiceOrdersPaged(this.currentPage, this.pageSize).toPromise(),
       this.clientService.getAllClients().toPromise(),
       this.vehicleService.getAllVehicles().toPromise(),
       this.materialMasterService.getAllMaterials().toPromise()
-    ]).then(([orders, clients, vehicles, materials]) => {
-      this.serviceOrders = orders || [];
+    ]).then(([pagedResult, clients, vehicles, materials]) => {
+      this.serviceOrders = pagedResult?.data || [];
+      this.totalCount = pagedResult?.totalCount || 0;
+      this.totalPages = pagedResult?.totalPages || 0;
+      this.currentPage = pagedResult?.currentPage || 1;
       this.clients = clients || [];
       this.vehicles = vehicles || [];
       this.allMaterials = materials || [];
@@ -329,5 +338,43 @@ export class ServiceOrdersComponent implements OnInit {
         console.error('Error deleting material:', err);
       }
     });
+  }
+
+  // Pagination methods
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadData();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadData();
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+    
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }

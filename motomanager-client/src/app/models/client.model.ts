@@ -26,3 +26,11 @@ export interface UpdateClientRequest {
   telefon: string;
   email: string;
 }
+
+export interface PagedResult<T> {
+  data: T[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}

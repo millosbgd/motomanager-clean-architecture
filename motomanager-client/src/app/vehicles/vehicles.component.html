@@ -41,6 +41,28 @@
       </tbody>
     </table>
     <p *ngIf="vehicles.length === 0 && !loading" class="no-data">Nema vozila u bazi.</p>
+    
+    <!-- Pagination Controls -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+        &#8249;
+      </button>
+      
+      <button *ngFor="let page of getPageNumbers()" 
+              class="pagination-btn"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        &#8250;
+      </button>
+      
+      <span class="pagination-info">
+        Strana {{ currentPage }} od {{ totalPages }} (ukupno {{ totalCount }} stavki)
+      </span>
+    </div>
   </section>
 
   <!-- Modal za dodavanje vozila -->

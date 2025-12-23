@@ -29,3 +29,11 @@ export interface UpdateServiceOrderRequest {
   opisRada: string;
   kilometraza: number;
 }
+
+export interface PagedResult<T> {
+  data: T[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}
