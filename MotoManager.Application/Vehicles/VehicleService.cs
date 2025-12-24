@@ -36,7 +36,7 @@ public class VehicleService
             v.Model,
             v.Plate,
             v.ClientId,
-            ""  // ClientNaziv will be in the result from procedure
+            v.Client?.Naziv ?? ""
         )).ToList();
         
         return new

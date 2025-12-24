@@ -6,11 +6,11 @@ namespace MotoManager.Api.Authorization;
 
 public class RegisteredUserHandler : AuthorizationHandler<RegisteredUserRequirement>
 {
-    private readonly KorisnikService _korisnikService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public RegisteredUserHandler(KorisnikService korisnikService)
+    public RegisteredUserHandler(IServiceProvider serviceProvider)
     {
-        _korisnikService = korisnikService;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task HandleRequirementAsync(
@@ -27,8 +27,12 @@ public class RegisteredUserHandler : AuthorizationHandler<RegisteredUserRequirem
             return;
         }
 
+        // Resolve scoped service from service provider
+        using var scope = _serviceProvider.CreateScope();
+        var korisnikService = scope.ServiceProvider.GetRequiredService<KorisnikService>();
+
         // Proveri da li korisnik postoji u bazi
-        var korisnikExists = await _korisnikService.KorisnikExistsAsync(userId);
+        var korisnikExists = await korisnikService.KorisnikExistsAsync(userId);
 
         if (korisnikExists)
         {

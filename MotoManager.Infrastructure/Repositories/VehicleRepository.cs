@@ -4,11 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Dapper;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
 
 namespace MotoManager.Infrastructure.Repositories;
+
+// Helper class for mapping stored procedure results
+internal class VehiclePagedResult
+{
+    public int Id { get; set; }
+    public string Plate { get; set; } = string.Empty;
+    public string Model { get; set; } = string.Empty;
+    public int ClientId { get; set; }
+    public string ClientNaziv { get; set; } = string.Empty;
+    public int TotalCount { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+}
 
 public class VehicleRepository : IVehicleRepository
 {
@@ -29,33 +44,39 @@ public class VehicleRepository : IVehicleRepository
 
     public async Task<(IEnumerable<Vehicle> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
     {
-        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
-        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+        var connection = _db.Database.GetDbConnection();
+        
+        // Query stored procedure - ONE database call
+        var results = await connection.QueryAsync<VehiclePagedResult>(
+            "sp_GetVehiclesPaged",
+            new { PageNumber = pageNumber, PageSize = pageSize },
+            commandType: System.Data.CommandType.StoredProcedure
+        );
 
-        var vehicles = await _db.Vehicles
-            .FromSqlRaw("EXEC sp_GetVehiclesPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
-            .AsNoTracking()
-            .ToListAsync();
-
-        if (vehicles.Count == 0)
+        var resultsList = results.ToList();
+        
+        if (resultsList.Count == 0)
         {
             return (new List<Vehicle>(), 0, pageNumber, pageSize, 0);
         }
 
-        var firstVehicle = vehicles[0];
-        var totalCount = (int)_db.Entry(firstVehicle).Property("TotalCount").CurrentValue!;
-        var currentPage = (int)_db.Entry(firstVehicle).Property("CurrentPage").CurrentValue!;
-        var totalPages = (int)_db.Entry(firstVehicle).Property("TotalPages").CurrentValue!;
+        var first = resultsList[0];
+        
+        // Map results directly from stored procedure - NO additional query!
+        var vehicles = resultsList.Select(r => new Vehicle
+        {
+            Id = r.Id,
+            Model = r.Model,
+            Plate = r.Plate,
+            ClientId = r.ClientId,
+            Client = new Client 
+            { 
+                Id = r.ClientId, 
+                Naziv = r.ClientNaziv 
+            }
+        }).ToList();
 
-        // Load Client navigation properties
-        var vehicleIds = vehicles.Select(v => v.Id).ToList();
-        var vehiclesWithClients = await _db.Vehicles
-            .Include(v => v.Client)
-            .Where(v => vehicleIds.Contains(v.Id))
-            .AsNoTracking()
-            .ToListAsync();
-
-        return (vehiclesWithClients, totalCount, currentPage, pageSize, totalPages);
+        return (vehicles, first.TotalCount, first.CurrentPage, first.PageSize, first.TotalPages);
     }
 
     public async Task<Vehicle?> GetByIdAsync(int id)
