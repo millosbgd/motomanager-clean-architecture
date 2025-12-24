@@ -15,6 +15,7 @@ BEGIN
         Id,
         Naziv,
         Adresa,
+        Grad,
         Telefon,
         Email,
         PIB,
