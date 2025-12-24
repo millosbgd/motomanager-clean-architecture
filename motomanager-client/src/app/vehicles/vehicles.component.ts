@@ -50,7 +50,7 @@ export class VehiclesComponent implements OnInit {
     this.error = null;
     this.vehicleService.getVehiclesPaged(this.currentPage, this.pageSize).subscribe({
       next: (pagedResult) => {
-        this.vehicles = pagedResult.data || [];
+        this.vehicles = pagedResult.items || [];
         this.totalCount = pagedResult.totalCount || 0;
         this.totalPages = pagedResult.totalPages || 0;
         this.currentPage = pagedResult.currentPage || 1;
