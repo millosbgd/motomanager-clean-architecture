@@ -16,7 +16,7 @@ export interface UpdateMaterialRequest {
 }
 
 export interface PagedResult<T> {
-  data: T[];
+  items: T[];
   totalCount: number;
   currentPage: number;
   pageSize: number;

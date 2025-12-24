@@ -1,5 +1,6 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
+using Dapper;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
@@ -22,22 +23,37 @@ public class MaterialRepository : IMaterialRepository
 
     public async System.Threading.Tasks.Task<(System.Collections.Generic.IEnumerable<Material> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
     {
-        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
-        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+        var connection = _context.Database.GetDbConnection();
+        
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+        
+        var results = await connection.QueryAsync<dynamic>(
+            "sp_GetMaterialsPaged",
+            new { PageNumber = pageNumber, PageSize = pageSize },
+            commandType: System.Data.CommandType.StoredProcedure
+        );
 
-        var materials = await _context.Materials
-            .FromSqlRaw("EXEC sp_GetMaterialsPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
-            .ToListAsync();
-
-        if (materials.Count == 0)
+        var resultsList = results.ToList();
+        
+        if (resultsList.Count == 0)
         {
             return (new System.Collections.Generic.List<Material>(), 0, pageNumber, pageSize, 0);
         }
 
-        var firstMaterial = materials[0];
-        var totalCount = (int)_context.Entry(firstMaterial).Property("TotalCount").CurrentValue!;
-        var currentPage = (int)_context.Entry(firstMaterial).Property("CurrentPage").CurrentValue!;
-        var totalPages = (int)_context.Entry(firstMaterial).Property("TotalPages").CurrentValue!;
+        var first = resultsList[0];
+        int totalCount = (int)first.TotalCount;
+        int currentPage = (int)first.CurrentPage;
+        int totalPages = (int)first.TotalPages;
+
+        var materials = resultsList.Select(r => new Material
+        {
+            Id = (int)r.Id,
+            Naziv = (string)r.Naziv ?? string.Empty,
+            JedinicnaCena = (decimal)r.JedinicnaCena
+        }).ToList();
 
         return (materials, totalCount, currentPage, pageSize, totalPages);
     }

@@ -48,7 +48,7 @@ export class MaterialsComponent implements OnInit {
     
     this.materialService.getMaterialsPaged(this.currentPage, this.pageSize).subscribe({
       next: (pagedResult) => {
-        this.materials = pagedResult.data || [];
+        this.materials = pagedResult.items || [];
         this.totalCount = pagedResult.totalCount || 0;
         this.totalPages = pagedResult.totalPages || 0;
         this.currentPage = pagedResult.currentPage || 1;
