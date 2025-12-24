@@ -52,8 +52,8 @@ public class VehicleRepository : IVehicleRepository
             await connection.OpenAsync();
         }
         
-        // Query stored procedure - ONE database call
-        var results = await connection.QueryAsync<VehiclePagedResult>(
+        // Query stored procedure - use dynamic for explicit mapping
+        var results = await connection.QueryAsync<dynamic>(
             "sp_GetVehiclesPaged",
             new { PageNumber = pageNumber, PageSize = pageSize },
             commandType: System.Data.CommandType.StoredProcedure
@@ -61,35 +61,31 @@ public class VehicleRepository : IVehicleRepository
 
         var resultsList = results.ToList();
         
-        // DEBUG: Log first result to see what Dapper is mapping
-        if (resultsList.Count > 0)
-        {
-            var first = resultsList[0];
-            Console.WriteLine($"DEBUG: First vehicle - Id={first.Id}, Plate={first.Plate}, Model={first.Model}, ClientId={first.ClientId}, ClientNaziv='{first.ClientNaziv}'");
-        }
-        
         if (resultsList.Count == 0)
         {
             return (new List<Vehicle>(), 0, pageNumber, pageSize, 0);
         }
 
-        var metadata = resultsList[0];
+        var first = resultsList[0];
+        int totalCount = (int)first.TotalCount;
+        int currentPage = (int)first.CurrentPage;
+        int totalPages = (int)first.TotalPages;
         
-        // Map results directly from stored procedure - NO additional query!
+        // Map results directly from stored procedure - explicit field access
         var vehicles = resultsList.Select(r => new Vehicle
         {
-            Id = r.Id,
-            Model = r.Model,
-            Plate = r.Plate,
-            ClientId = r.ClientId,
+            Id = (int)r.Id,
+            Model = (string)r.Model ?? string.Empty,
+            Plate = (string)r.Plate ?? string.Empty,
+            ClientId = (int)r.ClientId,
             Client = new Client 
             { 
-                Id = r.ClientId, 
-                Naziv = r.ClientNaziv 
+                Id = (int)r.ClientId, 
+                Naziv = (string)r.ClientNaziv ?? string.Empty
             }
         }).ToList();
 
-        return (vehicles, metadata.TotalCount, metadata.CurrentPage, metadata.PageSize, metadata.TotalPages);
+        return (vehicles, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<Vehicle?> GetByIdAsync(int id)
