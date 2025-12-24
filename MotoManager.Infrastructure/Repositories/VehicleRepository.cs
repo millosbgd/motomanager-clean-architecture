@@ -67,6 +67,16 @@ public class VehicleRepository : IVehicleRepository
         }
 
         var first = resultsList[0];
+        
+        // DEBUG: Log all properties from dynamic object
+        Console.WriteLine("=== DEBUG: Dynamic object properties ===");
+        var dict = (IDictionary<string, object>)first;
+        foreach (var prop in dict)
+        {
+            Console.WriteLine($"{prop.Key} = {prop.Value}");
+        }
+        Console.WriteLine("=== END DEBUG ===");
+        
         int totalCount = (int)first.TotalCount;
         int currentPage = (int)first.CurrentPage;
         int totalPages = (int)first.TotalPages;
