@@ -1,3 +1,0 @@
-C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\publish\MotoManager.Domain.dll
-C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\publish\MotoManager.Domain.deps.json
-C:\Users\MilosNovakovic\YandexDisk\Posao\Cycle\Private\motomanager-clean-architecture\publish\MotoManager.Domain.pdb

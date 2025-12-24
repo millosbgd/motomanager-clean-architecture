@@ -114,3 +114,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# .NET Core
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Publish folders - keep only root publish
+MotoManager.Api/publish/
+MotoManager.Api/bin/*/publish/
+publish/publish/
+**/publish/publish/
