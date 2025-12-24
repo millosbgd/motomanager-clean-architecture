@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MotoManager.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b54cfcaa55ff8a8bbfc53a96d5b87b1545618d3a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3e54480f765737737782a7306cc8e599fd86eb54")]
 [assembly: System.Reflection.AssemblyProductAttribute("MotoManager.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MotoManager.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

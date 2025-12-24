@@ -61,12 +61,19 @@ public class VehicleRepository : IVehicleRepository
 
         var resultsList = results.ToList();
         
+        // DEBUG: Log first result to see what Dapper is mapping
+        if (resultsList.Count > 0)
+        {
+            var first = resultsList[0];
+            Console.WriteLine($"DEBUG: First vehicle - Id={first.Id}, Plate={first.Plate}, Model={first.Model}, ClientId={first.ClientId}, ClientNaziv='{first.ClientNaziv}'");
+        }
+        
         if (resultsList.Count == 0)
         {
             return (new List<Vehicle>(), 0, pageNumber, pageSize, 0);
         }
 
-        var first = resultsList[0];
+        var metadata = resultsList[0];
         
         // Map results directly from stored procedure - NO additional query!
         var vehicles = resultsList.Select(r => new Vehicle
@@ -82,7 +89,7 @@ public class VehicleRepository : IVehicleRepository
             }
         }).ToList();
 
-        return (vehicles, first.TotalCount, first.CurrentPage, first.PageSize, first.TotalPages);
+        return (vehicles, metadata.TotalCount, metadata.CurrentPage, metadata.PageSize, metadata.TotalPages);
     }
 
     public async Task<Vehicle?> GetByIdAsync(int id)
