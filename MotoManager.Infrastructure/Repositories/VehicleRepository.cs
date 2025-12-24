@@ -46,6 +46,12 @@ public class VehicleRepository : IVehicleRepository
     {
         var connection = _db.Database.GetDbConnection();
         
+        // Ensure connection is open
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+        
         // Query stored procedure - ONE database call
         var results = await connection.QueryAsync<VehiclePagedResult>(
             "sp_GetVehiclesPaged",
