@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
+using Dapper;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
@@ -24,22 +25,41 @@ public class ClientRepository : IClientRepository
 
     public async Task<(IEnumerable<Client> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
     {
-        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
-        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+        var connection = _context.Database.GetDbConnection();
+        
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+        
+        var results = await connection.QueryAsync<dynamic>(
+            "sp_GetClientsPaged",
+            new { PageNumber = pageNumber, PageSize = pageSize },
+            commandType: System.Data.CommandType.StoredProcedure
+        );
 
-        var clients = await _context.Clients
-            .FromSqlRaw("EXEC sp_GetClientsPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
-            .ToListAsync();
-
-        if (clients.Count == 0)
+        var resultsList = results.ToList();
+        
+        if (resultsList.Count == 0)
         {
             return (new List<Client>(), 0, pageNumber, pageSize, 0);
         }
 
-        var firstClient = clients[0];
-        var totalCount = (int)_context.Entry(firstClient).Property("TotalCount").CurrentValue!;
-        var currentPage = (int)_context.Entry(firstClient).Property("CurrentPage").CurrentValue!;
-        var totalPages = (int)_context.Entry(firstClient).Property("TotalPages").CurrentValue!;
+        var first = resultsList[0];
+        int totalCount = (int)first.TotalCount;
+        int currentPage = (int)first.CurrentPage;
+        int totalPages = (int)first.TotalPages;
+
+        var clients = resultsList.Select(r => new Client
+        {
+            Id = (int)r.Id,
+            Naziv = (string)r.Naziv ?? string.Empty,
+            Adresa = (string)r.Adresa ?? string.Empty,
+            Grad = (string)r.Grad ?? string.Empty,
+            PIB = (string)r.PIB ?? string.Empty,
+            Telefon = (string)r.Telefon ?? string.Empty,
+            Email = (string)r.Email ?? string.Empty
+        }).ToList();
 
         return (clients, totalCount, currentPage, pageSize, totalPages);
     }

@@ -67,7 +67,7 @@ export class ClientsComponent implements OnInit {
     this.error = null;
     this.clientService.getClientsPaged(this.currentPage, this.pageSize).subscribe({
       next: (pagedResult) => {
-        this.clients = pagedResult.data || [];
+        this.clients = pagedResult.items || [];
         this.totalCount = pagedResult.totalCount || 0;
         this.totalPages = pagedResult.totalPages || 0;
         this.currentPage = pagedResult.currentPage || 1;

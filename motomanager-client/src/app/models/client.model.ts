@@ -28,7 +28,7 @@ export interface UpdateClientRequest {
 }
 
 export interface PagedResult<T> {
-  data: T[];
+  items: T[];
   totalCount: number;
   currentPage: number;
   pageSize: number;
