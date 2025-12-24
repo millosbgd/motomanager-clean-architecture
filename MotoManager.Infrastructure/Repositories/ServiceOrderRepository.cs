@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
+using Dapper;
 using MotoManager.Application.Abstractions;
 using MotoManager.Domain.Entities;
 using MotoManager.Infrastructure.Data;
@@ -29,35 +29,63 @@ public class ServiceOrderRepository : IServiceOrderRepository
 
     public async Task<(IEnumerable<ServiceOrder> Items, int TotalCount, int CurrentPage, int PageSize, int TotalPages)> GetAllPagedAsync(int pageNumber, int pageSize)
     {
-        var pageNumberParam = new SqlParameter("@PageNumber", pageNumber);
-        var pageSizeParam = new SqlParameter("@PageSize", pageSize);
+        var connection = _context.Database.GetDbConnection();
+        
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+        
+        var results = await connection.QueryAsync<dynamic>(
+            "sp_GetServiceOrdersPaged",
+            new { PageNumber = pageNumber, PageSize = pageSize },
+            commandType: System.Data.CommandType.StoredProcedure
+        );
 
-        var serviceOrders = await _context.ServiceOrders
-            .FromSqlRaw("EXEC sp_GetServiceOrdersPaged @PageNumber, @PageSize", pageNumberParam, pageSizeParam)
-            .AsNoTracking()
-            .ToListAsync();
-
-        if (serviceOrders.Count == 0)
+        var resultsList = results.ToList();
+        
+        if (resultsList.Count == 0)
         {
             return (new List<ServiceOrder>(), 0, pageNumber, pageSize, 0);
         }
 
-        var firstOrder = serviceOrders[0];
-        var totalCount = (int)_context.Entry(firstOrder).Property("TotalCount").CurrentValue!;
-        var currentPage = (int)_context.Entry(firstOrder).Property("CurrentPage").CurrentValue!;
-        var totalPages = (int)_context.Entry(firstOrder).Property("TotalPages").CurrentValue!;
+        var first = resultsList[0];
+        int totalCount = (int)first.TotalCount;
+        int currentPage = (int)first.CurrentPage;
+        int totalPages = (int)first.TotalPages;
 
-        // Load navigation properties
-        var orderIds = serviceOrders.Select(so => so.Id).ToList();
-        var ordersWithNav = await _context.ServiceOrders
-            .Include(so => so.Client)
-            .Include(so => so.Vehicle)
-            .Include(so => so.Korisnik)
-            .Where(so => orderIds.Contains(so.Id))
-            .AsNoTracking()
-            .ToListAsync();
+        var serviceOrders = resultsList.Select(r => new ServiceOrder
+        {
+            Id = (int)r.Id,
+            BrojNaloga = (string)r.BrojNaloga ?? string.Empty,
+            Datum = (System.DateTime)r.Datum,
+            ClientId = (int)r.ClientId,
+            VehicleId = (int)r.VehicleId,
+            OpisRada = (string)r.OpisRada ?? string.Empty,
+            Kilometraza = (int)r.Kilometraza,
+            KorisnikId = r.KorisnikId != null ? (string)r.KorisnikId : null,
+            // Navigation properties for DTO mapping
+            Client = new Client 
+            { 
+                Id = (int)r.ClientId,
+                Naziv = (string)r.ClientNaziv ?? string.Empty
+            },
+            Vehicle = new Vehicle 
+            { 
+                Id = (int)r.VehicleId,
+                Model = (string)r.VehicleModel ?? string.Empty,
+                Plate = (string)r.VehiclePlate ?? string.Empty
+            },
+            Korisnik = r.KorisnikId != null && r.KorisnikImePrezime != null 
+                ? new Korisnik 
+                { 
+                    Id = (string)r.KorisnikId,
+                    ImePrezime = (string)r.KorisnikImePrezime 
+                }
+                : null
+        }).ToList();
 
-        return (ordersWithNav, totalCount, currentPage, pageSize, totalPages);
+        return (serviceOrders, totalCount, currentPage, pageSize, totalPages);
     }
 
     public async Task<ServiceOrder?> GetByIdAsync(int id)

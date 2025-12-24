@@ -100,7 +100,7 @@ export class ServiceOrdersComponent implements OnInit {
       this.vehicleService.getAllVehicles().toPromise(),
       this.materialMasterService.getAllMaterials().toPromise()
     ]).then(([pagedResult, clients, vehicles, materials]) => {
-      this.serviceOrders = pagedResult?.data || [];
+      this.serviceOrders = pagedResult?.items || [];
       this.totalCount = pagedResult?.totalCount || 0;
       this.totalPages = pagedResult?.totalPages || 0;
       this.currentPage = pagedResult?.currentPage || 1;

@@ -42,14 +42,14 @@ public class ServiceOrderService
             o.BrojNaloga, 
             o.Datum, 
             o.ClientId, 
-            "",
+            o.Client?.Naziv ?? "",
             o.VehicleId, 
-            "",
-            "",
+            o.Vehicle?.Model ?? "",
+            o.Vehicle?.Plate ?? "",
             o.OpisRada, 
             o.Kilometraza,
             o.KorisnikId,
-            ""
+            o.Korisnik?.ImePrezime ?? ""
         ));
         
         return new
