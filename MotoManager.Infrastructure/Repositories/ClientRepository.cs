@@ -55,7 +55,7 @@ public class ClientRepository : IClientRepository
             Id = (int)r.Id,
             Naziv = (string)r.Naziv ?? string.Empty,
             Adresa = (string)r.Adresa ?? string.Empty,
-            Grad = (string)r.Grad ?? string.Empty,
+            Grad = string.Empty,
             PIB = (string)r.PIB ?? string.Empty,
             Telefon = (string)r.Telefon ?? string.Empty,
             Email = (string)r.Email ?? string.Empty
